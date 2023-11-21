@@ -1,0 +1,327 @@
+Received Log : 
+
+[Nov 15, 2023 06:08:03 PM] ASCII:
+Ta=51.5C V=14.9V, I=0.00A, Te=89.1C, aD=  0 rD= 99
+Ta=51.5C V=14.9V, I=0.00A, Te=89.0C, aD=  0 rD= 99
+Ta=51.5C V=14.9V, I=0.00A, Te=88.9C, aD=  0 rD= 99
+Ta=51.5C V=14.9V, I=0.00A, Te=89.0C, aD=  0 rD= 99
+Ta=51.5C V=15.0V, I=0.00A, Te=89.1C, aD=  0 rD= 99
+Ta=51.5C V=14.9V, I=0.00A, Te=89.3C, aD=  0 rD= 99
+Ta=51.5C V=14.9V, I=0.00A, Te=89.5C, aD=  0 rD= 99
+Ta=51.5C V=15.0V, I=0.00A, Te=89.6C, aD=  0 rD= 99
+Ta=51.5C V=14.9V, I=0.00A, Te=89.8C, aD=  0 rD= 99
+Ta=51.5C V=15.0V, I=0.00A, Te=89.9C, aD=  0 rD= 99
+Ta=51.5C V=15.0V, I=0.00A, Te=90.1C, aD=  0 rD= 99
+Ta=51.5C V=15.0V, I=0.00A, Te=90.2C, aD=  0 rD= 99
+Ta=51.5C V=15.0V, I=0.00A, Te=90.4C, aD=  0 rD= 99
+Ta=51.5C V=14.9V, I=0.00A, Te=90.5C, aD=  0 rD= 99
+Ta=51.5C V=15.0V, I=0.00A, Te=90.7C, aD=  0 rD= 99
+Ta=51.5C V=15.0V, I=0.00A, Te=90.8C, aD=  0 rD= 99
+Ta=51.5C V=14.9V, I=0.00A, Te=91.0C, aD=  0 rD= 99
+Ta=51.5C V=15.0V, I=0.00A, Te=91.1C, aD=  0 rD= 99
+Ta=51.5C V=15.0V, I=0.00A, Te=91.2C, aD=  0 rD= 99
+Ta=51.5C V=15.0V, I=0.00A, Te=91.3C, aD=  0 rD= 99
+Ta=51.5C V=14.9V, I=0.00A, Te=91.5C, aD=  0 rD= 99
+Ta=51.5C V=15.0V, I=0.00A, Te=91.6C, aD=  0 rD= 99
+Ta=51.5C V=14.9V, I=0.00A, Te=91.7C, aD=  0 rD= 99
+Ta=51.6C V=14.9V, I=0.00A, Te=91.8C, aD=  0 rD= 99
+Ta=51.5C V=15.0V, I=0.00A, Te=92.0C, aD=  0 rD= 99
+Ta=51.5C V=14.9V, I=0.00A, Te=92.1C, aD=  0 rD= 99
+Ta=51.5C V=14.9V, I=0.00A, Te=92.2C, aD=  0 rD= 99
+Ta=51.6C V=15.0V, I=0.00A, Te=92.3C, aD=  0 rD= 99
+Ta=51.6C V=15.0V, I=0.00A, Te=92.3C, aD=  0 rD= 99
+Ta=51.6C V=14.9V, I=0.00A, Te=92.5C, aD=  0 rD= 99
+Ta=51.6C V=15.0V, I=0.00A, Te=92.6C, aD=  0 rD= 99
+Ta=51.6C V=14.9V, I=0.00A, Te=92.7C, aD=  0 rD= 99
+Ta=51.6C V=14.9V, I=0.00A, Te=92.7C, aD=  0 rD= 99
+Ta=51.6C V=14.9V, I=0.00A, Te=92.8C, aD=  0 rD= 99
+Ta=51.6C V=15.0V, I=0.00A, Te=93.0C, aD=  0 rD= 99
+Ta=51.6C V=14.9V, I=0.00A, Te=93.0C, aD=  0 rD= 99
+Ta=51.6C V=14.9V, I=0.00A, Te=93.1C, aD=  0 rD= 99
+Ta=51.6C V=14.6V, I=0.93A, Te=93.2C, aD=100 rD= 99
+Ta=51.6C V=14.7V, I=0.87A, Te=93.3C, aD=100 rD= 99
+Ta=51.6C V=14.7V, I=0.84A, Te=93.4C, aD=100 rD= 99
+Ta=51.6C V=14.7V, I=0.82A, Te=93.5C, aD=100 rD= 99
+Ta=51.6C V=14.7V, I=0.80A, Te=93.5C, aD=100 rD= 99
+Ta=51.6C V=14.7V, I=0.78A, Te=93.6C, aD=100 rD= 99
+Ta=51.6C V=14.7V, I=0.77A, Te=93.6C, aD=100 rD= 99
+Ta=51.6C V=14.7V, I=0.76A, Te=93.8C, aD=100 rD= 99
+Ta=51.6C V=14.7V, I=0.75A, Te=93.8C, aD=100 rD= 99
+Ta=51.6C V=14.7V, I=0.74A, Te=94.0C, aD=100 rD= 99
+Ta=51.7C V=14.7V, I=0.74A, Te=94.0C, aD=100 rD= 99
+Ta=51.7C V=14.7V, I=0.73A, Te=94.1C, aD=100 rD= 99
+Ta=51.7C V=14.7V, I=0.73A, Te=94.1C, aD=100 rD= 99
+Ta=51.7C V=14.7V, I=0.72A, Te=93.8C, aD=100 rD= 99
+Ta=51.7C V=14.7V, I=0.72A, Te=93.4C, aD=100 rD= 99
+Ta=51.7C V=14.7V, I=0.71A, Te=92.6C, aD=100 rD= 99
+Ta=51.7C V=14.7V, I=0.71A, Te=91.3C, aD=100 rD= 99
+Ta=51.7C V=14.7V, I=0.71A, Te=90.0C, aD=100 rD= 99
+Ta=51.7C V=14.7V, I=0.71A, Te=88.9C, aD=100 rD= 99
+Ta=51.7C V=14.7V, I=0.71A, Te=87.8C, aD=100 rD= 99
+Ta=51.7C V=14.7V, I=0.71A, Te=86.7C, aD=100 rD= 99
+Ta=51.7C V=14.7V, I=0.70A, Te=85.6C, aD=100 rD= 99
+Ta=51.7C V=14.7V, I=0.70A, Te=84.4C, aD=100 rD= 99
+Ta=51.7C V=14.7V, I=0.70A, Te=83.4C, aD=100 rD= 97
+Ta=51.7C V=14.7V, I=0.70A, Te=82.7C, aD=100 rD= 97
+Ta=51.8C V=14.7V, I=0.70A, Te=82.0C, aD=100 rD= 96
+Ta=51.8C V=14.7V, I=0.70A, Te=81.6C, aD= 92 rD= 92
+Ta=51.8C V=14.7V, I=0.65A, Te=81.2C, aD= 87 rD= 87
+Ta=51.8C V=14.7V, I=0.61A, Te=81.0C, aD= 82 rD= 82
+Ta=51.8C V=14.8V, I=0.58A, Te=80.9C, aD= 79 rD= 79
+Ta=51.8C V=14.8V, I=0.57A, Te=80.9C, aD= 77 rD= 77
+Ta=51.8C V=14.8V, I=0.54A, Te=80.9C, aD= 76 rD= 76
+Ta=51.8C V=14.8V, I=0.53A, Te=80.9C, aD= 73 rD= 73
+Ta=51.8C V=14.8V, I=0.53A, Te=81.0C, aD= 73 rD= 73
+Ta=51.8C V=14.8V, I=0.52A, Te=81.1C, aD= 72 rD= 72
+Ta=51.8C V=14.8V, I=0.51A, Te=81.2C, aD= 72 rD= 72
+Ta=51.8C V=14.8V, I=0.51A, Te=81.3C, aD= 71 rD= 71
+Ta=51.8C V=14.8V, I=0.50A, Te=81.4C, aD= 71 rD= 71
+Ta=51.8C V=14.8V, I=0.50A, Te=81.5C, aD= 70 rD= 70
+Ta=51.9C V=14.8V, I=0.49A, Te=81.7C, aD= 70 rD= 70
+Ta=51.9C V=14.8V, I=0.49A, Te=81.8C, aD= 69 rD= 69
+Ta=51.9C V=14.8V, I=0.48A, Te=82.0C, aD= 69 rD= 69
+Ta=51.9C V=14.8V, I=0.48A, Te=82.1C, aD= 68 rD= 68
+Ta=51.9C V=14.8V, I=0.47A, Te=82.3C, aD= 67 rD= 67
+Ta=51.9C V=14.8V, I=0.47A, Te=82.4C, aD= 67 rD= 67
+Ta=51.9C V=14.8V, I=0.47A, Te=82.6C, aD= 66 rD= 66
+Ta=51.9C V=14.8V, I=0.47A, Te=82.8C, aD= 66 rD= 66
+Ta=51.9C V=14.8V, I=0.46A, Te=82.9C, aD= 65 rD= 65
+Ta=51.9C V=14.8V, I=0.46A, Te=83.0C, aD= 65 rD= 65
+Ta=51.9C V=14.8V, I=0.46A, Te=83.2C, aD= 64 rD= 64
+Ta=51.9C V=14.8V, I=0.45A, Te=83.4C, aD= 64 rD= 64
+Ta=51.9C V=14.8V, I=0.45A, Te=83.5C, aD= 63 rD= 63
+Ta=51.9C V=14.8V, I=0.45A, Te=83.7C, aD= 62 rD= 62
+Ta=51.9C V=14.8V, I=0.46A, Te=83.8C, aD= 64 rD= 64
+Ta=51.9C V=14.8V, I=0.46A, Te=84.0C, aD= 64 rD= 64
+Ta=51.9C V=14.8V, I=0.46A, Te=84.2C, aD= 63 rD= 63
+Ta=51.9C V=14.8V, I=0.46A, Te=84.3C, aD= 63 rD= 63
+Ta=52.0C V=14.8V, I=0.45A, Te=84.4C, aD= 62 rD= 62
+Ta=52.0C V=14.8V, I=0.45A, Te=84.6C, aD= 62 rD= 62
+Ta=52.0C V=14.8V, I=0.45A, Te=84.7C, aD= 61 rD= 61
+Ta=52.0C V=14.8V, I=0.46A, Te=84.8C, aD= 63 rD= 63
+Ta=52.0C V=14.8V, I=0.46A, Te=85.0C, aD= 63 rD= 63
+Ta=52.0C V=14.8V, I=0.46A, Te=85.1C, aD= 62 rD= 62
+Ta=52.0C V=14.8V, I=0.46A, Te=85.2C, aD= 62 rD= 62
+Ta=52.0C V=14.8V, I=0.45A, Te=85.3C, aD= 61 rD= 61
+Ta=52.0C V=14.8V, I=0.45A, Te=85.4C, aD= 61 rD= 61
+Ta=52.0C V=14.8V, I=0.45A, Te=85.4C, aD= 61 rD= 61
+Ta=52.0C V=14.8V, I=0.45A, Te=85.5C, aD= 60 rD= 60
+Ta=52.0C V=14.8V, I=0.47A, Te=85.6C, aD= 62 rD= 62
+Ta=52.0C V=14.8V, I=0.46A, Te=85.7C, aD= 62 rD= 62
+Ta=52.0C V=14.8V, I=0.46A, Te=85.8C, aD= 61 rD= 61
+Ta=52.0C V=14.8V, I=0.46A, Te=85.9C, aD= 61 rD= 61
+Ta=52.0C V=14.8V, I=0.45A, Te=85.9C, aD= 60 rD= 60
+Ta=52.0C V=14.8V, I=0.45A, Te=86.0C, aD= 60 rD= 60
+Ta=52.0C V=14.8V, I=0.45A, Te=86.1C, aD= 60 rD= 60
+Ta=52.0C V=14.8V, I=0.48A, Te=86.2C, aD= 64 rD= 64
+Ta=52.0C V=14.8V, I=0.47A, Te=86.2C, aD= 64 rD= 64
+Ta=52.0C V=14.8V, I=0.47A, Te=86.4C, aD= 63 rD= 63
+Ta=52.0C V=14.8V, I=0.47A, Te=86.4C, aD= 63 rD= 63
+Ta=52.0C V=14.8V, I=0.46A, Te=86.5C, aD= 63 rD= 63
+Ta=52.0C V=14.8V, I=0.46A, Te=86.6C, aD= 62 rD= 62
+Ta=52.1C V=14.8V, I=0.45A, Te=86.6C, aD= 62 rD= 62
+Ta=52.1C V=14.8V, I=0.45A, Te=86.7C, aD= 62 rD= 62
+Ta=52.1C V=14.8V, I=0.48A, Te=86.8C, aD= 66 rD= 66
+Ta=52.1C V=14.8V, I=0.48A, Te=86.8C, aD= 66 rD= 66
+Ta=52.1C V=14.8V, I=0.47A, Te=86.9C, aD= 66 rD= 66
+Ta=52.1C V=14.8V, I=0.47A, Te=87.0C, aD= 65 rD= 65
+Ta=52.1C V=14.7V, I=0.47A, Te=87.0C, aD= 65 rD= 65
+Ta=52.1C V=14.8V, I=0.46A, Te=87.0C, aD= 65 rD= 65
+Ta=52.1C V=14.8V, I=0.46A, Te=87.1C, aD= 64 rD= 64
+Ta=52.1C V=14.8V, I=0.45A, Te=87.2C, aD= 64 rD= 64
+Ta=52.1C V=14.8V, I=0.46A, Te=87.2C, aD= 65 rD= 65
+Ta=52.1C V=14.8V, I=0.47A, Te=87.3C, aD= 67 rD= 67
+Ta=52.1C V=14.8V, I=0.47A, Te=87.4C, aD= 67 rD= 67
+Ta=52.1C V=14.8V, I=0.47A, Te=87.4C, aD= 67 rD= 67
+Ta=52.1C V=14.8V, I=0.47A, Te=87.5C, aD= 67 rD= 67
+Ta=52.1C V=14.8V, I=0.47A, Te=87.5C, aD= 66 rD= 66
+Ta=52.1C V=14.8V, I=0.47A, Te=87.6C, aD= 66 rD= 66
+Ta=52.1C V=14.8V, I=0.47A, Te=87.6C, aD= 66 rD= 66
+Ta=52.1C V=14.8V, I=0.47A, Te=87.7C, aD= 66 rD= 66
+Ta=52.1C V=14.8V, I=0.47A, Te=87.7C, aD= 66 rD= 66
+Ta=52.1C V=14.8V, I=0.49A, Te=87.8C, aD= 68 rD= 68
+Ta=52.1C V=14.8V, I=0.48A, Te=87.8C, aD= 68 rD= 68
+Ta=52.1C V=14.8V, I=0.48A, Te=87.9C, aD= 68 rD= 68
+Ta=52.1C V=14.8V, I=0.48A, Te=88.0C, aD= 67 rD= 67
+Ta=52.1C V=14.8V, I=0.48A, Te=88.0C, aD= 67 rD= 67
+Ta=52.1C V=14.8V, I=0.48A, Te=88.1C, aD= 67 rD= 67
+Ta=52.1C V=14.8V, I=0.48A, Te=88.1C, aD= 67 rD= 67
+Ta=52.0C V=14.8V, I=0.48A, Te=88.2C, aD= 67 rD= 67
+Ta=52.1C V=14.8V, I=0.48A, Te=88.2C, aD= 67 rD= 67
+Ta=52.0C V=14.8V, I=0.48A, Te=88.2C, aD= 67 rD= 67
+Ta=52.0C V=14.8V, I=0.47A, Te=88.3C, aD= 66 rD= 66
+Ta=52.0C V=14.8V, I=0.47A, Te=88.4C, aD= 65 rD= 65
+Ta=52.0C V=14.8V, I=0.47A, Te=88.4C, aD= 64 rD= 64
+Ta=52.0C V=14.8V, I=0.47A, Te=88.5C, aD= 64 rD= 64
+Ta=52.0C V=14.8V, I=0.47A, Te=88.5C, aD= 64 rD= 64
+Ta=52.0C V=14.8V, I=0.47A, Te=88.6C, aD= 64 rD= 64
+Ta=52.0C V=14.8V, I=0.47A, Te=88.6C, aD= 64 rD= 64
+Ta=52.0C V=14.8V, I=0.47A, Te=88.6C, aD= 64 rD= 64
+Ta=52.0C V=14.8V, I=0.47A, Te=88.7C, aD= 64 rD= 64
+Ta=52.0C V=14.7V, I=0.47A, Te=88.7C, aD= 64 rD= 64
+Ta=52.0C V=14.7V, I=0.47A, Te=88.7C, aD= 64 rD= 64
+Ta=52.0C V=14.8V, I=0.47A, Te=88.7C, aD= 63 rD= 63
+Ta=52.0C V=14.8V, I=0.47A, Te=88.6C, aD= 63 rD= 63
+Ta=52.0C V=14.8V, I=0.47A, Te=88.6C, aD= 63 rD= 63
+Ta=52.0C V=14.8V, I=0.47A, Te=88.5C, aD= 63 rD= 63
+Ta=52.0C V=14.8V, I=0.47A, Te=88.4C, aD= 63 rD= 63
+Ta=52.0C V=14.8V, I=0.47A, Te=88.3C, aD= 63 rD= 63
+Ta=52.0C V=14.8V, I=0.46A, Te=88.2C, aD= 63 rD= 63
+Ta=52.0C V=14.8V, I=0.46A, Te=88.2C, aD= 63 rD= 63
+Ta=52.0C V=14.8V, I=0.46A, Te=88.1C, aD= 63 rD= 63
+Ta=52.0C V=14.7V, I=0.45A, Te=88.0C, aD= 63 rD= 63
+Ta=52.0C V=14.8V, I=0.46A, Te=87.9C, aD= 63 rD= 63
+Ta=52.0C V=14.8V, I=0.46A, Te=87.9C, aD= 63 rD= 63
+Ta=52.0C V=14.8V, I=0.45A, Te=87.8C, aD= 63 rD= 63
+Ta=52.1C V=14.8V, I=0.45A, Te=87.7C, aD= 63 rD= 63
+Ta=52.1C V=14.8V, I=0.45A, Te=87.7C, aD= 63 rD= 63
+Ta=52.1C V=14.7V, I=0.45A, Te=87.6C, aD= 63 rD= 63
+Ta=52.1C V=14.8V, I=0.45A, Te=87.6C, aD= 63 rD= 63
+Ta=52.1C V=14.7V, I=0.45A, Te=87.5C, aD= 63 rD= 63
+Ta=52.1C V=14.8V, I=0.44A, Te=87.5C, aD= 63 rD= 63
+Ta=52.1C V=14.8V, I=0.45A, Te=87.5C, aD= 64 rD= 64
+Ta=52.1C V=14.8V, I=0.45A, Te=87.5C, aD= 64 rD= 64
+Ta=52.1C V=14.8V, I=0.45A, Te=87.5C, aD= 64 rD= 64
+Ta=52.1C V=14.8V, I=0.45A, Te=87.5C, aD= 64 rD= 64
+Ta=52.1C V=14.8V, I=0.45A, Te=87.6C, aD= 64 rD= 64
+Ta=52.1C V=14.8V, I=0.45A, Te=87.6C, aD= 63 rD= 63
+Ta=52.1C V=14.8V, I=0.45A, Te=87.6C, aD= 63 rD= 63
+Ta=52.1C V=14.7V, I=0.45A, Te=87.7C, aD= 63 rD= 63
+Ta=52.1C V=14.7V, I=0.45A, Te=87.8C, aD= 63 rD= 63
+Ta=52.1C V=14.8V, I=0.45A, Te=87.8C, aD= 63 rD= 63
+Ta=52.1C V=14.7V, I=0.45A, Te=87.9C, aD= 63 rD= 63
+Ta=52.1C V=14.8V, I=0.45A, Te=87.9C, aD= 62 rD= 62
+Ta=52.1C V=14.7V, I=0.45A, Te=88.0C, aD= 62 rD= 62
+Ta=52.1C V=14.8V, I=0.45A, Te=88.1C, aD= 62 rD= 62
+Ta=52.1C V=14.8V, I=0.45A, Te=88.1C, aD= 62 rD= 62
+Ta=52.1C V=14.8V, I=0.45A, Te=88.2C, aD= 62 rD= 62
+Ta=52.1C V=14.7V, I=0.45A, Te=88.2C, aD= 62 rD= 62
+Ta=52.1C V=14.8V, I=0.43A, Te=88.3C, aD= 60 rD= 60
+Ta=52.1C V=14.8V, I=0.44A, Te=88.4C, aD= 60 rD= 60
+Ta=52.1C V=14.8V, I=0.44A, Te=88.4C, aD= 60 rD= 60
+Ta=52.1C V=14.8V, I=0.44A, Te=88.5C, aD= 60 rD= 60
+Ta=52.1C V=14.8V, I=0.44A, Te=88.5C, aD= 60 rD= 60
+Ta=52.1C V=14.8V, I=0.44A, Te=88.6C, aD= 59 rD= 59
+Ta=52.1C V=14.8V, I=0.44A, Te=88.6C, aD= 59 rD= 59
+Ta=52.1C V=14.7V, I=0.44A, Te=88.7C, aD= 59 rD= 59
+Ta=52.1C V=14.8V, I=0.44A, Te=88.8C, aD= 59 rD= 59
+Ta=52.1C V=14.8V, I=0.44A, Te=88.8C, aD= 59 rD= 59
+Ta=52.1C V=14.8V, I=0.44A, Te=88.8C, aD= 59 rD= 59
+Ta=52.1C V=14.8V, I=0.44A, Te=88.8C, aD= 59 rD= 59
+Ta=52.1C V=14.8V, I=0.44A, Te=88.8C, aD= 59 rD= 59
+Ta=52.0C V=14.8V, I=0.43A, Te=88.8C, aD= 58 rD= 58
+Ta=52.1C V=14.7V, I=0.43A, Te=88.7C, aD= 58 rD= 58
+Ta=52.1C V=14.8V, I=0.43A, Te=88.7C, aD= 58 rD= 58
+Ta=52.1C V=14.8V, I=0.43A, Te=88.6C, aD= 58 rD= 58
+Ta=52.0C V=14.7V, I=0.43A, Te=88.5C, aD= 58 rD= 58
+Ta=52.0C V=14.7V, I=0.43A, Te=88.4C, aD= 58 rD= 58
+Ta=52.0C V=14.8V, I=0.43A, Te=88.3C, aD= 58 rD= 58
+Ta=52.0C V=14.7V, I=0.43A, Te=88.2C, aD= 58 rD= 58
+Ta=52.0C V=14.8V, I=0.43A, Te=88.2C, aD= 58 rD= 58
+Ta=52.0C V=14.7V, I=0.42A, Te=88.1C, aD= 58 rD= 58
+Ta=52.0C V=14.8V, I=0.42A, Te=88.1C, aD= 58 rD= 58
+Ta=52.0C V=14.8V, I=0.42A, Te=88.0C, aD= 58 rD= 58
+Ta=52.0C V=14.7V, I=0.42A, Te=88.0C, aD= 58 rD= 58
+Ta=52.0C V=14.8V, I=0.42A, Te=87.9C, aD= 58 rD= 58
+Ta=52.0C V=14.8V, I=0.42A, Te=87.8C, aD= 58 rD= 58
+Ta=52.0C V=14.7V, I=0.41A, Te=87.8C, aD= 58 rD= 58
+Ta=52.0C V=14.8V, I=0.41A, Te=87.7C, aD= 58 rD= 58
+Ta=52.0C V=14.8V, I=0.41A, Te=87.6C, aD= 58 rD= 58
+Ta=52.0C V=14.8V, I=0.41A, Te=87.6C, aD= 58 rD= 58
+Ta=52.0C V=14.8V, I=0.41A, Te=87.5C, aD= 58 rD= 58
+Ta=52.0C V=14.8V, I=0.41A, Te=87.5C, aD= 58 rD= 58
+Ta=52.0C V=14.8V, I=0.42A, Te=87.5C, aD= 59 rD= 59
+Ta=52.0C V=14.8V, I=0.42A, Te=87.5C, aD= 59 rD= 59
+Ta=52.0C V=14.8V, I=0.42A, Te=87.6C, aD= 59 rD= 59
+Ta=52.0C V=14.8V, I=0.42A, Te=87.6C, aD= 59 rD= 59
+Ta=52.0C V=14.8V, I=0.42A, Te=87.6C, aD= 59 rD= 59
+Ta=52.0C V=14.8V, I=0.41A, Te=87.7C, aD= 58 rD= 58
+Ta=52.0C V=14.8V, I=0.42A, Te=87.7C, aD= 58 rD= 58
+Ta=52.0C V=14.7V, I=0.41A, Te=87.8C, aD= 58 rD= 58
+Ta=52.0C V=14.8V, I=0.42A, Te=87.8C, aD= 58 rD= 58
+Ta=52.0C V=14.8V, I=0.42A, Te=87.9C, aD= 58 rD= 58
+Ta=52.0C V=14.8V, I=0.42A, Te=88.0C, aD= 58 rD= 58
+Ta=52.0C V=14.8V, I=0.42A, Te=88.0C, aD= 58 rD= 58
+Ta=52.0C V=14.8V, I=0.42A, Te=88.1C, aD= 57 rD= 57
+Ta=52.0C V=14.8V, I=0.42A, Te=88.1C, aD= 57 rD= 57
+Ta=52.0C V=14.8V, I=0.42A, Te=88.2C, aD= 57 rD= 57
+Ta=52.0C V=14.7V, I=0.42A, Te=88.2C, aD= 57 rD= 57
+Ta=52.0C V=14.8V, I=0.41A, Te=88.3C, aD= 55 rD= 55
+Ta=52.0C V=14.8V, I=0.41A, Te=88.4C, aD= 55 rD= 55
+Ta=52.0C V=14.8V, I=0.41A, Te=88.4C, aD= 55 rD= 55
+Ta=52.0C V=14.8V, I=0.41A, Te=88.5C, aD= 55 rD= 55
+Ta=52.0C V=14.8V, I=0.41A, Te=88.6C, aD= 55 rD= 55
+Ta=52.0C V=14.8V, I=0.41A, Te=88.6C, aD= 55 rD= 55
+Ta=52.0C V=14.8V, I=0.41A, Te=88.7C, aD= 55 rD= 55
+Ta=52.1C V=14.8V, I=0.41A, Te=88.7C, aD= 54 rD= 54
+Ta=52.1C V=14.8V, I=0.41A, Te=88.8C, aD= 54 rD= 54
+Ta=52.1C V=14.7V, I=0.41A, Te=88.8C, aD= 54 rD= 54
+Ta=52.1C V=14.8V, I=0.41A, Te=88.8C, aD= 54 rD= 54
+Ta=52.0C V=14.8V, I=0.41A, Te=88.9C, aD= 54 rD= 54
+Ta=52.1C V=14.8V, I=0.41A, Te=88.9C, aD= 54 rD= 54
+Ta=52.1C V=14.8V, I=0.41A, Te=88.8C, aD= 53 rD= 53
+Ta=52.1C V=14.7V, I=0.41A, Te=88.8C, aD= 53 rD= 53
+Ta=52.1C V=14.8V, I=0.41A, Te=88.7C, aD= 53 rD= 53
+Ta=52.0C V=14.7V, I=0.40A, Te=88.6C, aD= 53 rD= 53
+Ta=52.1C V=14.8V, I=0.40A, Te=88.5C, aD= 53 rD= 53
+Ta=52.0C V=14.8V, I=0.40A, Te=88.4C, aD= 53 rD= 53
+Ta=52.0C V=14.8V, I=0.40A, Te=88.3C, aD= 53 rD= 53
+Ta=52.0C V=14.7V, I=0.39A, Te=88.3C, aD= 53 rD= 53
+Ta=52.0C V=14.8V, I=0.39A, Te=88.2C, aD= 53 rD= 53
+Ta=52.0C V=14.8V, I=0.39A, Te=88.2C, aD= 53 rD= 53
+Ta=52.0C V=14.8V, I=0.39A, Te=88.1C, aD= 53 rD= 53
+Ta=52.0C V=14.8V, I=0.39A, Te=88.0C, aD= 53 rD= 53
+Ta=52.0C V=14.8V, I=0.39A, Te=88.0C, aD= 54 rD= 54
+Ta=52.0C V=14.8V, I=0.39A, Te=87.9C, aD= 54 rD= 54
+Ta=52.0C V=14.8V, I=0.39A, Te=87.8C, aD= 53 rD= 53
+Ta=52.0C V=14.8V, I=0.39A, Te=87.8C, aD= 53 rD= 53
+Ta=52.0C V=14.8V, I=0.39A, Te=87.7C, aD= 53 rD= 53
+Ta=52.0C V=14.8V, I=0.39A, Te=87.6C, aD= 53 rD= 53
+Ta=52.0C V=14.8V, I=0.38A, Te=87.6C, aD= 53 rD= 53
+Ta=52.0C V=14.8V, I=0.38A, Te=87.5C, aD= 53 rD= 53
+Ta=52.0C V=14.8V, I=0.38A, Te=87.5C, aD= 53 rD= 53
+Ta=52.0C V=14.8V, I=0.39A, Te=87.5C, aD= 54 rD= 54
+Ta=52.0C V=14.8V, I=0.39A, Te=87.5C, aD= 54 rD= 54
+Ta=52.0C V=14.8V, I=0.39A, Te=87.5C, aD= 54 rD= 54
+Ta=52.0C V=14.7V, I=0.39A, Te=87.6C, aD= 54 rD= 54
+Ta=52.0C V=14.8V, I=0.39A, Te=87.6C, aD= 54 rD= 54
+Ta=52.0C V=14.8V, I=0.39A, Te=87.6C, aD= 54 rD= 54
+Ta=52.0C V=14.8V, I=0.39A, Te=87.7C, aD= 54 rD= 54
+Ta=52.0C V=14.8V, I=0.39A, Te=87.7C, aD= 53 rD= 53
+Ta=52.0C V=14.8V, I=0.39A, Te=87.8C, aD= 53 rD= 53
+Ta=52.0C V=14.8V, I=0.39A, Te=87.8C, aD= 53 rD= 53
+Ta=52.0C V=14.8V, I=0.39A, Te=87.9C, aD= 53 rD= 53
+Ta=52.0C V=14.8V, I=0.39A, Te=88.0C, aD= 53 rD= 53
+Ta=52.0C V=14.8V, I=0.39A, Te=88.0C, aD= 53 rD= 53
+Ta=52.0C V=14.8V, I=0.39A, Te=88.1C, aD= 53 rD= 53
+Ta=52.0C V=14.8V, I=0.39A, Te=88.2C, aD= 52 rD= 52
+Ta=52.0C V=14.8V, I=0.39A, Te=88.2C, aD= 52 rD= 52
+Ta=52.0C V=14.8V, I=0.39A, Te=88.3C, aD= 51 rD= 51
+Ta=52.0C V=14.8V, I=0.38A, Te=88.3C, aD= 50 rD= 50
+Ta=52.0C V=14.8V, I=0.38A, Te=88.4C, aD= 50 rD= 50
+Ta=52.0C V=14.8V, I=0.38A, Te=88.4C, aD= 50 rD= 50
+Ta=52.0C V=14.8V, I=0.38A, Te=88.5C, aD= 50 rD= 50
+Ta=52.0C V=14.8V, I=0.38A, Te=88.6C, aD= 50 rD= 50
+Ta=52.0C V=14.8V, I=0.38A, Te=88.6C, aD= 50 rD= 50
+Ta=52.0C V=14.8V, I=0.38A, Te=88.7C, aD= 50 rD= 50
+Ta=52.0C V=14.8V, I=0.38A, Te=88.7C, aD= 50 rD= 50
+Ta=52.0C V=14.8V, I=0.38A, Te=88.8C, aD= 50 rD= 50
+Ta=52.0C V=14.8V, I=0.38A, Te=88.8C, aD= 49 rD= 49
+Ta=52.0C V=14.8V, I=0.38A, Te=88.8C, aD= 49 rD= 49
+Ta=52.0C V=14.8V, I=0.38A, Te=88.8C, aD= 49 rD= 49
+Ta=52.0C V=14.8V, I=0.37A, Te=88.8C, aD= 49 rD= 49
+Ta=52.0C V=14.8V, I=0.37A, Te=88.8C, aD= 49 rD= 49
+Ta=52.0C V=14.8V, I=0.37A, Te=88.7C, aD= 49 rD= 49
+Ta=52.1C V=14.8V, I=0.37A, Te=88.6C, aD= 49 rD= 49
+Ta=52.1C V=14.8V, I=0.37A, Te=88.5C, aD= 49 rD= 49
+Ta=52.1C V=14.8V, I=0.37A, Te=88.4C, aD= 49 rD= 49
+Ta=52.1C V=14.8V, I=0.37A, Te=88.3C, aD= 48 rD= 48
+Ta=52.1C V=14.8V, I=0.36A, Te=88.2C, aD= 48 rD= 48
+Ta=52.1C V=14.8V, I=0.36A, Te=88.2C, aD= 48 rD= 48
+Ta=52.1C V=14.8V, I=0.36A, Te=88.1C, aD= 48 rD= 48
+
+
+Send Log : 
+
+ASCII:dbg_base
+ASCII:c_bmw
