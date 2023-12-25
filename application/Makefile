@@ -20,6 +20,7 @@ TARGET = TCU
 # building variables
 ######################################
 PATH_PROJECT := $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
+ROOT := $(PATH_PROJECT)/..
 # debug build?
 DEBUG = 1
 # optimization
@@ -46,7 +47,6 @@ Core/Src/tim.c \
 Core/Src/usart.c \
 Core/Src/pid_regulator.c \
 Core/Src/selftest.c \
-$(PATH_PROJECT)/../common/ring_buffer/src/ring_buffer.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_gpio.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_adc.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_dma.c \
@@ -62,7 +62,7 @@ Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_pwr.c
 
 # ASM sources
 ASM_SOURCES =  \
-$(PATH_PROJECT)/../startup_stm32f103xb.s
+$(ROOT)/startup_stm32f103xb.s
 
 
 #######################################
@@ -126,13 +126,14 @@ C_INCLUDES =  \
 -ICore/Inc \
 -IDrivers/STM32F1xx_HAL_Driver/Inc \
 -IDrivers/CMSIS/Device/ST/STM32F1xx/Include \
--IDrivers/CMSIS/Include \
--I$(PATH_PROJECT)/../common/ring_buffer/src
+-IDrivers/CMSIS/Include 
 
-$(info C_INCLUDES $(C_INCLUDES))
+# $(info C_INCLUDES $(C_INCLUDES))
 
-include $(PATH_PROJECT)/../common/ntc_sensor/ntc_sensor.mk
-include $(PATH_PROJECT)/../common/table_search/table_search.mk
+# makefiles
+include $(ROOT)/common/ntc_sensor/ntc_sensor.mk
+include $(ROOT)/common/ring_buffer/ring_buffer.mk
+include $(ROOT)/common/table_search/table_search.mk
 
 
 # compile gcc flags
@@ -153,7 +154,7 @@ CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
 # LDFLAGS
 #######################################
 # link script
-LDSCRIPT = $(PATH_PROJECT)/../STM32F103C8Tx_FLASH.ld
+LDSCRIPT = $(ROOT)/STM32F103C8Tx_FLASH.ld
 
 # libraries
 LIBS = -lc -lm -lnosys 
