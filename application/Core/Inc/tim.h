@@ -47,7 +47,6 @@ extern "C" {
   void MX_TIM4_Init(void);
 
   /* USER CODE BEGIN Prototypes */
-  void systick_upd_callback(void);
   void set_pwm_duty(int32_t duty);
   uint32_t get_pwm_duty(void);
 
