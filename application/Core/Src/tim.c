@@ -25,23 +25,7 @@
 
 /* USER CODE BEGIN 0 */
 #include "time_utils.h"
-extern volatile uint32_t timer_ms;
 volatile pwm_capture_t pwm_capt;
-
-void systick_upd_callback(void)
-{
-  timer_ms += 1U;
-}
-
-uint64_t get_time_us(void)
-{
-  uint32_t systik_val, ms_val;
-  __disable_irq();
-  systik_val = SysTick->VAL;
-  ms_val = timer_ms;
-  __enable_irq();
-  return ms_val*1000u+((0xFFFFFFu - systik_val)/72u);
-}
 
 void set_pwm_duty(int32_t duty)
 {
