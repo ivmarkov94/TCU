@@ -41,7 +41,6 @@ C_SOURCES =  \
 Core/Src/main.c \
 Core/Src/adc.c \
 Core/Src/stm32f1xx_it.c \
-Core/Src/system_stm32f1xx.c \
 Core/Src/gpio.c \
 Core/Src/tim.c \
 Core/Src/usart.c \
@@ -50,19 +49,20 @@ Core/Src/selftest.c \
 Core/Src/dma.c \
 Core/Src/iwdg.c \
 Core/Src/wwdg.c \
-Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_gpio.c \
-Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_adc.c \
-Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_dma.c \
-Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_rcc.c \
-Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_utils.c \
-Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_exti.c \
-Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_pwr.c \
-Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_tim.c \
-Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usart.c
+$(ROOT)/common/Drivers/system_stm32f1xx.c \
+$(ROOT)/common/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_gpio.c \
+$(ROOT)/common/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_adc.c \
+$(ROOT)/common/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_dma.c \
+$(ROOT)/common/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_rcc.c \
+$(ROOT)/common/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_utils.c \
+$(ROOT)/common/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_exti.c \
+$(ROOT)/common/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_pwr.c \
+$(ROOT)/common/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_tim.c \
+$(ROOT)/common/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usart.c
 
 # ASM sources
 ASM_SOURCES =  \
-$(ROOT)/startup_stm32f103xb.s
+$(ROOT)/common/startup_stm32f103xb.s
 
 
 #######################################
@@ -124,9 +124,9 @@ AS_INCLUDES =
 # C includes
 C_INCLUDES =  \
 -ICore/Inc \
--IDrivers/CMSIS/Include  \
--IDrivers/STM32F1xx_HAL_Driver/Inc \
--IDrivers/CMSIS/Device/ST/STM32F1xx/Include
+-I$(ROOT)/common/Drivers/CMSIS/Include  \
+-I$(ROOT)/common/Drivers/STM32F1xx_HAL_Driver/Inc \
+-I$(ROOT)/common/Drivers/CMSIS/Device/ST/STM32F1xx/Include
 
 # $(info C_INCLUDES $(C_INCLUDES))
 
@@ -155,7 +155,7 @@ CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
 # LDFLAGS
 #######################################
 # link script
-LDSCRIPT = $(ROOT)/STM32F103C8Tx_FLASH.ld
+LDSCRIPT = $(ROOT)/common/STM32F103C8Tx_FLASH.ld
 
 # libraries
 LIBS = -lc -lm -lnosys 
