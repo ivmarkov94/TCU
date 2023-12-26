@@ -155,7 +155,14 @@ CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
 # LDFLAGS
 #######################################
 # link script
-LDSCRIPT = $(ROOT)/common/STM32F103C8Tx_FLASH.ld
+ifeq ($(FOR_BL),Y)
+	C_DEFS += -DAPL_FOR_BL
+	C_DEFS += -DUSER_VECT_TAB_ADDRESS
+	C_DEFS += -DVECT_TAB_OFFSET=0x4000
+	LDSCRIPT = $(ROOT)/common/STM32F103C8Tx_FLASH_for_BL.ld
+else
+	LDSCRIPT = $(ROOT)/common/STM32F103C8Tx_FLASH.ld
+endif
 
 # libraries
 LIBS = -lc -lm -lnosys 
