@@ -2,6 +2,7 @@
 #ifndef DEVICE_H
 #define DEVICE_H
 #include "main.h"
+#include "time_utils.h"
 
 #define ARRAY_SIZE(x)  (sizeof(x) / sizeof((x) [0]))
 

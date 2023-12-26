@@ -1,21 +1,21 @@
 /* USER CODE BEGIN Header */
 /**
-  ******************************************************************************
-  * @file    tim.c
-  * @brief   This file provides code for the configuration
-  *          of the TIM instances.
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2023 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file    tim.c
+ * @brief   This file provides code for the configuration
+ *          of the TIM instances.
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) 2023 STMicroelectronics.
+ * All rights reserved.
+ *
+ * This software is licensed under terms that can be found in the LICENSE file
+ * in the root directory of this software component.
+ * If no LICENSE file comes with this software, it is provided AS-IS.
+ *
+ ******************************************************************************
+ */
 /* TIM2 init function *//* ADC support */
 /* TIM3 init function *//* us,ms support */
 /* TIM4 init function *//* PWM */
@@ -24,7 +24,8 @@
 #include "tim.h"
 
 /* USER CODE BEGIN 0 */
-volatile uint32_t timer_ms;
+#include "time_utils.h"
+extern volatile uint32_t timer_ms;
 volatile pwm_capture_t pwm_capt;
 
 void systick_upd_callback(void)
@@ -32,22 +33,12 @@ void systick_upd_callback(void)
   timer_ms += 1U;
 }
 
-uint32_t time_elapsed_ms(uint32_t last_time_ms, uint32_t interval_ms)
-{
-  return (get_time_ms()-last_time_ms) > interval_ms;
-}
-
-uint32_t get_time_ms(void)
-{
-  return timer_ms;
-}
-
 uint64_t get_time_us(void)
 {
   uint32_t systik_val, ms_val;
   __disable_irq();
-    systik_val = SysTick->VAL;
-    ms_val = timer_ms;
+  systik_val = SysTick->VAL;
+  ms_val = timer_ms;
   __enable_irq();
   return ms_val*1000u+((0xFFFFFFu - systik_val)/72u);
 }

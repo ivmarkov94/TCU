@@ -131,6 +131,7 @@ C_INCLUDES =  \
 # $(info C_INCLUDES $(C_INCLUDES))
 
 # makefiles
+include $(ROOT)/common/time_utils/time_utils.mk
 include $(ROOT)/common/ntc_sensor/ntc_sensor.mk
 include $(ROOT)/common/ring_buffer/ring_buffer.mk
 include $(ROOT)/common/table_search/table_search.mk
