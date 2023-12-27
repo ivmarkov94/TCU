@@ -20,7 +20,6 @@
 #include "main.h"
 #include "iwdg.h"
 #include "usart.h"
-#include "wwdg.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -52,7 +51,7 @@ extern uint16_t dma_buffer[];
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-
+void go_to_apl(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -98,7 +97,6 @@ int main(void)
   MX_GPIO_Init();
   MX_USART3_UART_Init();
   MX_IWDG_Init();
-  MX_WWDG_Init();
   /* USER CODE BEGIN 2 */
   LL_GPIO_SetOutputPin(led_GPIO_Port,led_Pin);/* Disable green led */
   /* USER CODE END 2 */
@@ -109,8 +107,10 @@ int main(void)
   {
     TASK(receive_cmd,100);
     TASK(wdgs_refresh, 5);
+    TASK(go_to_apl,1000);
+    LED_TONGLE_MS(100)
     /* USER CODE END WHILE */
-
+    
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -165,8 +165,22 @@ void SystemClock_Config(void)
 /* USER CODE BEGIN 4 */
 void wdgs_refresh(void)
 {
-  wwdg_refresh();
   iwdg_refresh();
+}
+void go_to_apl(void)
+{
+  uint32_t app_jump_addr;
+	void (*go2app)(void);
+
+  __disable_irq();
+  LL_RCC_DeInit();
+  LL_USART_DeInit(USART3);
+  
+	app_jump_addr = *((volatile uint32_t*) (APL_START_ADDRES + 4));/* getting address application Reset Handler() */
+	go2app = (void (*)(void))app_jump_addr;
+	__set_MSP(*((volatile uint32_t*)(APL_START_ADDRES))); /* load init address to Stack Point */
+  wdgs_refresh();
+	go2app();
 }
 /* USER CODE END 4 */
 

@@ -25,6 +25,8 @@ ROOT := $(PATH_PROJECT)/..
 DEBUG = 1
 # optimization
 OPT = -Og
+# to detect bootloader fw
+BL_FW = Y
 
 
 #######################################
@@ -43,7 +45,6 @@ Core/Src/stm32f1xx_it.c \
 Core/Src/gpio.c \
 Core/Src/usart.c \
 Core/Src/iwdg.c \
-Core/Src/wwdg.c \
 $(ROOT)/common/Drivers/system_stm32f1xx.c \
 $(ROOT)/common/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_gpio.c \
 $(ROOT)/common/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_rcc.c \
@@ -77,6 +78,7 @@ SZ = $(PREFIX)size
 endif
 HEX = $(CP) -O ihex
 BIN = $(CP) -O binary -S
+LD  = $(CC) -E -P -x 
  
 #######################################
 # CFLAGS
@@ -127,7 +129,7 @@ C_INCLUDES =  \
 # makefiles
 include $(ROOT)/common/time_utils/time_utils.mk
 include $(ROOT)/common/ring_buffer/ring_buffer.mk
-
+include $(ROOT)/common/ld_settings.mk
 
 # compile gcc flags
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
@@ -147,7 +149,8 @@ CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
 # LDFLAGS
 #######################################
 # link script
-LDSCRIPT = $(ROOT)/common/STM32F103C8Tx_FLASH_BL.ld
+LDSCRIPT_BASE = $(ROOT)/common/STM32F103C8Tx_FLASH.ld
+LDSCRIPT = $(BUILD_DIR)/preproccesor_script.ld
 
 # libraries
 LIBS = -lc -lm -lnosys 
@@ -155,7 +158,7 @@ LIBDIR =
 LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
 
 # default action: build all
-all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).bin $(BUILD_DIR)/$(TARGET).hex 
+all: $(LDSCRIPT) $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).bin $(BUILD_DIR)/$(TARGET).hex end.print
 
 
 #######################################
@@ -168,25 +171,30 @@ vpath %.c $(sort $(dir $(C_SOURCES)))
 OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(ASM_SOURCES:.s=.o)))
 vpath %.s $(sort $(dir $(ASM_SOURCES)))
 
-$(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR) 
+$(BUILD_DIR)/%.o: %.c $(MAKEFILE_LIST) | $(BUILD_DIR) 
 	$(CC) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
 
-$(BUILD_DIR)/%.o: %.s Makefile | $(BUILD_DIR)
+$(BUILD_DIR)/%.o: %.s $(MAKEFILE_LIST) | $(BUILD_DIR)
 	$(AS) -c $(CFLAGS) $< -o $@
 
-$(BUILD_DIR)/$(TARGET).elf: $(OBJECTS) Makefile
+$(BUILD_DIR)/$(TARGET).elf: $(LDSCRIPT) $(OBJECTS) $(MAKEFILE_LIST)
 	$(CC) $(OBJECTS) $(LDFLAGS) -o $@
 	$(SZ) $@
 
 $(BUILD_DIR)/%.hex: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
 	$(HEX) $< $@
 	
-$(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
+$(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf | $(BUILD_DIR) 
 	$(BIN) $< $@	
+
+$(BUILD_DIR)/%.ld: $(LDSCRIPT_BASE) $(MAKEFILE_LIST)
+	$(LD) c $< $(C_DEFS) -o $@ 	 
 	
 $(BUILD_DIR):
-	mkdir $@		
+	mkdir $@
 
+%.print:
+	$(info <$(FW_NAME) FW> START ADDR: $(FW_START_ADDRES), SIZE: $(FW_MAX_SIZE))		
 #######################################
 # clean up
 #######################################

@@ -124,6 +124,7 @@ int main(void)
     TASK(control_system,10);
     TASK(selftest_short_test,10000);
     TASK(wdgs_refresh, 5);
+    LED_TONGLE_MS(1000)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

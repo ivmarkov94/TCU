@@ -106,9 +106,6 @@
                                                      This value must be a multiple of 0x200. */
 #else
 #define VECT_TAB_BASE_ADDRESS   FLASH_BASE      /*!< Vector Table base address field*/
-#ifndef VECT_TAB_OFFSET/*!< Vector Table base offset field. This value must be a multiple of 0x200. */
-    #error(Need to define VECT_TAB_OFFSET)                                         
-#endif /* VECT_TAB_SRAM */
 #endif /* VECT_TAB_SRAM */
 #endif /* USER_VECT_TAB_ADDRESS */
 
@@ -182,7 +179,9 @@ void SystemInit (void)
 
   /* Configure the Vector Table location -------------------------------------*/
 #if defined(USER_VECT_TAB_ADDRESS)
-  SCB->VTOR = VECT_TAB_BASE_ADDRESS | VECT_TAB_OFFSET; /* Vector Table Relocation in Internal SRAM. */
+__disable_irq();
+  SCB->VTOR = APL_START_ADDRES; /* Vector Table Relocation in Internal SRAM. */
+__enable_irq();
 #endif /* USER_VECT_TAB_ADDRESS */
 }
 
