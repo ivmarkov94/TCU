@@ -116,13 +116,13 @@ uint8_t console_cmd(void)
     dbg_active ^=1;
   }else if(IS_CMD_MATCH("p="))
   {
-    pid_set_p((get_float_arg(&uart3.rx_buffer[2])));
+    pid_set_p((get_float_arg(&uart3.rx_fifo.buffer[2])));
   }else if(IS_CMD_MATCH("d="))
   {
-    pid_set_d(get_float_arg(&uart3.rx_buffer[2]));
+    pid_set_d(get_float_arg(&uart3.rx_fifo.buffer[2]));
   }else if(IS_CMD_MATCH("i="))
   {
-    pid_set_i(get_float_arg(&uart3.rx_buffer[2]));
+    pid_set_i(get_float_arg(&uart3.rx_fifo.buffer[2]));
   }else if(IS_CMD_MATCH("inpwm?"))
   {
     printf("T=%6.1fms, f=%5.1fHz"NLINE,pwm_capt.pwm_period_us/1000.f, 1000.f/(pwm_capt.pwm_period_us/1000.f));
@@ -189,7 +189,6 @@ void debug_handler(void)
     default:
       break;
     } 
-    LL_GPIO_TogglePin(led_GPIO_Port,led_Pin);
   }
 }
 /* USER CODE END 1 */
