@@ -4,7 +4,8 @@
 uint8_t tx_buf[UART_TX_BUF];
 uint8_t rx_buf[UART_RX_BUF];
 uart_t  uart3 = {.rx_fifo.buffer = rx_buf, .rx_fifo.size = UART_RX_BUF, .rx_fifo.flag_overflow = 0, .rx_fifo.flag_error_pop = 0,
-                 .tx_fifo.buffer = tx_buf, .tx_fifo.size = UART_TX_BUF, .tx_fifo.flag_overflow = 0, .tx_fifo.flag_error_pop = 0};
+                 .tx_fifo.buffer = tx_buf, .tx_fifo.size = UART_TX_BUF, .tx_fifo.flag_overflow = 0, .tx_fifo.flag_error_pop = 0,
+                 .transfer_completed = true};
 
 /* function to use printf() */
 int _write(int file, char *ptr, int len)
@@ -15,7 +16,11 @@ int _write(int file, char *ptr, int len)
     ring_push(ptr[ind],&uart3.tx_fifo);
     ind++;
   }
-  LL_USART_TransmitData8(USART3, ring_pop(&uart3.tx_fifo));
+  if(uart3.transfer_completed)
+  {
+    LL_USART_TransmitData8(USART3, ring_pop(&uart3.tx_fifo));
+    uart3.transfer_completed = false;
+  }
   return len;
 }
 
@@ -33,7 +38,7 @@ void console_handler(void)
     {
       if(console_cmd()==false)
       {
-        printf("Unknowned cmd %s"NLINE"Cmd list:"NLINE"wdt"CONSOLE_HELP_CMD,(char*)uart3.rx_fifo.buffer);
+        printf("Unknowned cmd: %s""Cmd list:"NLINE"wdt"CONSOLE_HELP_CMD,(char*)uart3.rx_fifo.buffer);
       }
     }
     ring_clear(&uart3.rx_fifo);

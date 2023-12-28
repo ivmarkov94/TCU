@@ -13,6 +13,7 @@ typedef struct{
   ring_buffer_t rx_fifo;
   ring_buffer_t tx_fifo;
   uint32_t rx_fifo_upd_ms;
+  uint8_t transfer_completed;
 }uart_t;
 
 extern uart_t uart3;

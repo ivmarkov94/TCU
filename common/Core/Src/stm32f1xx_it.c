@@ -108,7 +108,6 @@ void HardFault_Handler(void)
   static uint8_t  error_code[2] = {0xFF,0xFF};
   if(*((uint8_t*)REBOOT_INFO_AREA) == 0xFF )
   {
-    LL_GPIO_ResetOutputPin(led_GPIO_Port,led_Pin);
     if(__get_MSP()<=SRAM_BASE)
     {
       error_code[0] = STACK_OVERFLOW_ERROR;
@@ -308,6 +307,8 @@ void USART3_IRQHandler(void)
     if(ring_get_count(&uart3.tx_fifo)>0u)
     {
       LL_USART_TransmitData8(USART3, ring_pop(&uart3.tx_fifo));
+    }else{
+      uart3.transfer_completed = true;
     }
   }
   if(LL_USART_IsActiveFlag_ORE(USART3))
