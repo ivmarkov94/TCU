@@ -15,8 +15,6 @@ void dma_irq_callback(void)
     {
       LL_DMA_ClearFlag_TE1(DMA1);
       dma_te_callback();
-    }else{
-      LL_GPIO_ResetOutputPin(led_GPIO_Port,led_Pin);
     }
   }
 }
@@ -65,8 +63,6 @@ void tim2_irq_callback(void)
   {
     LL_TIM_ClearFlag_UPDATE(TIM2);
     tim2_upd_callback();
-  }else{
-      LL_GPIO_ResetOutputPin(led_GPIO_Port,led_Pin);
   }
 }
 
