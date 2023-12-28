@@ -22,12 +22,7 @@
 
 /* USER CODE BEGIN 0 */
 #include "device.h"
-uart_t uart3;
-uint8_t tx_buffer[UART_TX_BUF];
-ring_buffer_t tx_ring_buf = {.buffer = tx_buffer, .size = UART_TX_BUF, .flag_overflow = 0, .flag_error_pop = 0};
-
-/* static int32_t get_int_arg(uint8_t* ptr); */
-/* static float get_float_arg(uint8_t* ptr); */
+#include "usart_console.h"
 /* USER CODE END 0 */
 
 /* USART3 init function */
@@ -86,73 +81,8 @@ void MX_USART3_UART_Init(void)
 }
 
 /* USER CODE BEGIN 1 */
-int _write(int file, char *ptr, int len)
+uint8_t console_cmd(void)
 {
-  uint16_t ind = 0;
-  while (ind<len)
-  {
-    ring_push(ptr[ind],&tx_ring_buf);
-    ind++;
-  }
-  LL_USART_TransmitData8(USART3, ring_pop(&tx_ring_buf));
-  return len;
+  return 0;
 }
-
-void uart_buff_put_char(uint8_t data)
-{
-  if(uart3.last_indx < UART_RX_BUF)
-  {
-    uart3.rx_buffer[uart3.last_indx++] = data;
-    uart3.last_upd_ms = get_time_ms();
-  }else{
-    uart_rx_buff_reset();
-  }
-}
-
-void uart_rx_buff_reset(void)
-{
-  uart3.last_indx = 0u;
-}
-
-uint8_t uart_is_str_ready(void)
-{
-  uint8_t result = false;
-  if(time_elapsed_ms(uart3.last_upd_ms, 200) && uart3.last_indx!=0)
-  {
-    result = true;
-  }
-  return result;
-}
-
-void receive_cmd(void)
-{
-  if(uart_is_str_ready())
-  {
-    if(IS_CMD_RECIVED("wdt")) 
-    {
-      while(1)
-      {
-        ;
-      }
-    }else
-    {
-      printf("Unknowned cmd %s"NLINE"Cmd list:"NLINE"wdt"NLINE,(char*)&uart3.rx_buffer[0]);
-    }
-    uart_rx_buff_reset();
-  }
-}
-
-/* static int32_t get_int_arg(uint8_t* ptr)
-{
-  int32_t val = atoi((const char*)ptr);
-  printf("Updated to = %ld"NLINE,val);
-  return val;
-} */
-
-/* static float get_float_arg(uint8_t* ptr)
-{
-  float val = atof((const char*)ptr);
-  printf("Updated to = %5.3f"NLINE,val);
-  return val;
-} */
 /* USER CODE END 1 */

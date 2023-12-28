@@ -50,6 +50,7 @@ Core/Src/iwdg.c \
 Core/Src/wwdg.c \
 Core/Src/interrupt_handlers.c \
 $(ROOT)/common/Core/Src/stm32f1xx_it.c \
+$(ROOT)/common/Core/Src/usart_console.c \
 $(ROOT)/common/Drivers/system_stm32f1xx.c \
 $(ROOT)/common/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_gpio.c \
 $(ROOT)/common/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_adc.c \

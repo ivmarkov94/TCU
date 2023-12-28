@@ -19,7 +19,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "usart.h"
+#include "usart_console.h"
 #include "internal_flash.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */

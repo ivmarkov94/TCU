@@ -25,6 +25,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "device.h"
+#include "usart_console.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -105,7 +106,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    TASK(receive_cmd,100);
+    TASK(console_handler,100);
     TASK(wdgs_refresh, 5);
     TASK(go_to_apl,1000);
     LED_TONGLE_MS(100)

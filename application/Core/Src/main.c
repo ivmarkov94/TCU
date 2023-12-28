@@ -30,6 +30,7 @@
 /* USER CODE BEGIN Includes */
 #include "device.h"
 #include "pid_regulator.h"
+#include "usart_console.h"
 #include "selftest.h"
 /* USER CODE END Includes */
 
@@ -120,7 +121,7 @@ int main(void)
   while (1)
   {
     TASK(debug_handler,1000);
-    TASK(receive_cmd,100);
+    TASK(console_handler,100);
     TASK(control_system,10);
     TASK(selftest_short_test,10000);
     TASK(wdgs_refresh, 5);

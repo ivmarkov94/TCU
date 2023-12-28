@@ -31,12 +31,9 @@ extern "C" {
 /* USER CODE BEGIN Includes */
 #include "stdio.h"
 #include <string.h>
-#include "ring_buffer.h"
 #define  UART_RX_BUF 20
 #define  UART_TX_BUF 200
-
-#define IS_CMD_RECIVED(string)\
-    (strncmp(string,(const char*)&uart3.rx_buffer[0], (sizeof(string)-1))==0)
+#define  CONSOLE_HELP_CMD NLINE
 
 /* USER CODE END Includes */
 
@@ -49,24 +46,12 @@ typedef enum{
   dbg_var_adc_channels_raw_part2,
   dbg_var_amplifier_dif_input
 }dbg_var_e;
-
-typedef struct{
-  uint8_t rx_buffer[UART_RX_BUF];
-  uint8_t last_indx;
-  uint32_t last_upd_ms;
-}uart_t;
-
-extern ring_buffer_t tx_ring_buf;
 /* USER CODE END Private defines */
 
 void MX_USART3_UART_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-void uart_buff_put_char(uint8_t data);
-uint8_t uart_is_str_ready(void);
-void uart_rx_buff_reset(void);
-void debug_handler(void);
-void receive_cmd(void);
+uint8_t console_cmd(void);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus
