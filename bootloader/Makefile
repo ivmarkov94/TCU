@@ -127,9 +127,10 @@ C_INCLUDES =  \
 # $(info C_INCLUDES $(C_INCLUDES))
 
 # makefiles
+include $(ROOT)/common/ld_settings.mk
 include $(ROOT)/common/time_utils/time_utils.mk
 include $(ROOT)/common/ring_buffer/ring_buffer.mk
-include $(ROOT)/common/ld_settings.mk
+include $(ROOT)/common/internal_flash/internal_flash.mk
 
 # compile gcc flags
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections

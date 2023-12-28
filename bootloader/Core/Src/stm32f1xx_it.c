@@ -22,8 +22,10 @@
 #include "stm32f1xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "time_utils.h"
 #include "usart.h"
+#include "device.h"
+#include "time_utils.h"
+#include "internal_flash.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -109,8 +111,19 @@ void NMI_Handler(void)
 void HardFault_Handler(void)
 {
   /* USER CODE BEGIN HardFault_IRQn 0 */
-
-  /* USER CODE END HardFault_IRQn 0 */
+  static uint8_t  error_code[2] = {0xFF,0xFF};
+  if(*((uint8_t*)REBOOT_INFO_AREA) == 0xFF )
+  {
+    LL_GPIO_ResetOutputPin(led_GPIO_Port,led_Pin);
+    if(__get_MSP()<=SRAM_BASE)
+    {
+      error_code[0] = STACK_OVERFLOW_ERROR;
+    }else{
+      error_code[0] = UNKNOWN_ERROR;
+    }
+    WRITE_2BYTES_TO_FLASH(REBOOT_INFO_AREA, error_code)
+  }
+      /* USER CODE END HardFault_IRQn 0 */
   while (1)
   {
     /* USER CODE BEGIN W1_HardFault_IRQn 0 */
