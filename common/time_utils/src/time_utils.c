@@ -13,11 +13,6 @@ uint32_t get_time_ms(void)
     return timer_ms;
 }
 
-void systick_upd_callback(void)
-{
-  timer_ms += 1U;
-}
-
 uint64_t get_time_us(void)
 {
   uint32_t systik_val, ms_val;

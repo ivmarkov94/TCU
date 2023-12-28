@@ -50,10 +50,7 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "device.h"
-#include <stdio.h>
-#include "stdbool.h"
-#include <stdlib.h>
-#include <string.h>
+#include "interrupt_handlers.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

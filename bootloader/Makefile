@@ -41,10 +41,10 @@ BUILD_DIR = build
 # C sources
 C_SOURCES =  \
 Core/Src/main.c \
-Core/Src/stm32f1xx_it.c \
 Core/Src/gpio.c \
 Core/Src/usart.c \
 Core/Src/iwdg.c \
+$(ROOT)/common/Core/Src/stm32f1xx_it.c \
 $(ROOT)/common/Drivers/system_stm32f1xx.c \
 $(ROOT)/common/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_gpio.c \
 $(ROOT)/common/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_rcc.c \
@@ -119,6 +119,7 @@ AS_INCLUDES =
 # C includes
 C_INCLUDES =  \
 -ICore/Inc \
+-I$(ROOT)/common/Core/Inc \
 -I$(ROOT)/common/Drivers/CMSIS/Include  \
 -I$(ROOT)/common/Drivers/STM32F1xx_HAL_Driver/Inc \
 -I$(ROOT)/common/Drivers/CMSIS/Device/ST/STM32F1xx/Include \

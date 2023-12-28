@@ -19,13 +19,11 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "stm32f1xx_it.h"
+#include "usart.h"
+#include "internal_flash.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "adc.h"
-#include "tim.h"
-#include "usart.h"
-#include "adc_private.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -40,30 +38,7 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-// void ADC1_2_IRQHandler(void)
-// {
-//   /* USER CODE BEGIN ADC1_2_IRQn 0 */
-  
-//   if(LL_ADC_IsActiveFlag_EOS(ADC1))
-//   {
-//     LL_ADC_ClearFlag_EOS(ADC1);
-//     static int i =0;
-//     adc[i] = ADC1->DR;
-//     i++;
-//     if(i>2){
-//       i=0;
-//       /* LL_ADC_Disable(ADC1); */
-//     }
-//   }else{
-//     LL_GPIO_ResetOutputPin(led_GPIO_Port,led_Pin);
-//   }
-  
-//   /* USER CODE END ADC1_2_IRQn 0 */
 
-//   /* USER CODE BEGIN ADC1_2_IRQn 1 */
-
-//   /* USER CODE END ADC1_2_IRQn 1 */
-// }
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -84,7 +59,26 @@
 /* External variables --------------------------------------------------------*/
 
 /* USER CODE BEGIN EV */
-
+__WEAK void tim2_irq_callback(void);
+__WEAK void tim1_up_irq_callback(void);
+__WEAK void tim1_cc_irq_callback(void);
+__WEAK void dma_irq_callback(void);
+void tim2_irq_callback(void)
+{
+  ;
+}
+void tim1_up_irq_callback(void)
+{
+  ;
+}
+void tim1_cc_irq_callback(void)
+{
+  ;
+}
+void dma_irq_callback(void)
+{
+  ;
+}
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -111,7 +105,18 @@ void NMI_Handler(void)
 void HardFault_Handler(void)
 {
   /* USER CODE BEGIN HardFault_IRQn 0 */
-
+  static uint8_t  error_code[2] = {0xFF,0xFF};
+  if(*((uint8_t*)REBOOT_INFO_AREA) == 0xFF )
+  {
+    LL_GPIO_ResetOutputPin(led_GPIO_Port,led_Pin);
+    if(__get_MSP()<=SRAM_BASE)
+    {
+      error_code[0] = STACK_OVERFLOW_ERROR;
+    }else{
+      error_code[0] = UNKNOWN_ERROR;
+    }
+    WRITE_2BYTES_TO_FLASH(REBOOT_INFO_AREA, error_code)
+  }
   /* USER CODE END HardFault_IRQn 0 */
   while (1)
   {
@@ -210,7 +215,8 @@ void PendSV_Handler(void)
 void SysTick_Handler(void)
 {
   /* USER CODE BEGIN SysTick_IRQn 0 */
-  systick_upd_callback();
+  extern volatile uint32_t timer_ms;
+  timer_ms += 1U;
   /* USER CODE END SysTick_IRQn 0 */
 
   /* USER CODE BEGIN SysTick_IRQn 1 */
@@ -231,21 +237,7 @@ void SysTick_Handler(void)
 void DMA1_Channel1_IRQHandler(void)
 {
   /* USER CODE BEGIN DMA1_Channel1_IRQn 0 */
-  if(LL_DMA_IsActiveFlag_TC1(DMA1) == 1)
-  {
-    dma_tc_callback();
-    LL_DMA_ClearFlag_TC1(DMA1);
-  }else{
-    if(LL_DMA_IsActiveFlag_TE1(DMA1) == 1)
-    {
-      LL_DMA_ClearFlag_TE1(DMA1);
-      dma_te_callback();
-    }else{
-      LL_GPIO_ResetOutputPin(led_GPIO_Port,led_Pin);
-    }
-
-  }
-
+  dma_irq_callback();
   /* USER CODE END DMA1_Channel1_IRQn 0 */
 
   /* USER CODE BEGIN DMA1_Channel1_IRQn 1 */
@@ -259,19 +251,7 @@ void DMA1_Channel1_IRQHandler(void)
 void TIM1_UP_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM1_UP_IRQn 0 */
-  if(LL_TIM_IsActiveFlag_UPDATE(TIM1))
-  {
-    LL_TIM_ClearFlag_UPDATE(TIM1);
-    pwm_capt.tim_up_cnt++;
-    if((pwm_capt.tim_up_cnt > 20))
-    {
-      if(LL_GPIO_IsInputPinSet(GPIOA, LL_GPIO_PIN_8) == 0){
-        pwm_capt.req_duty = 2000;
-      }else{
-        pwm_capt.req_duty = 0;
-      }
-    }
-  }
+  tim1_up_irq_callback();
   /* USER CODE END TIM1_UP_IRQn 0 */
   /* USER CODE BEGIN TIM1_UP_IRQn 1 */
 
@@ -284,24 +264,7 @@ void TIM1_UP_IRQHandler(void)
 void TIM1_CC_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM1_CC_IRQn 0 */
-  if(LL_TIM_IsActiveFlag_CC1(TIM1))
-  {
-    LL_TIM_ClearFlag_CC1(TIM1);
-    TIM1->CNT = 0;
-    pwm_capt.pwm_period_us = pwm_capt.tim_up_cnt*(TIM1->ARR) + TIM1->CCR1;
-    pwm_capt.tim_up_cnt = 0;
-    if(pwm_capt.pwm_period_us != 0)
-    {
-      pwm_capt.req_duty = (((pwm_capt.pwm_period_us - pwm_capt.pwm_duty_us)*2000)/pwm_capt.pwm_period_us);
-    }
-
-  }
-  if(LL_TIM_IsActiveFlag_CC2(TIM1))
-  {
-    LL_TIM_ClearFlag_CC2(TIM1);
-    pwm_capt.pwm_duty_us = pwm_capt.tim_up_cnt*(TIM1->ARR) + TIM1->CCR2;
-  }
-
+  tim1_cc_irq_callback();
   /* USER CODE END TIM1_CC_IRQn 0 */
   /* USER CODE BEGIN TIM1_CC_IRQn 1 */
 
@@ -314,13 +277,7 @@ void TIM1_CC_IRQHandler(void)
 void TIM2_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM2_IRQn 0 */
-  if(LL_TIM_IsActiveFlag_UPDATE(TIM2)) /* every 4ms ADC support */
-  {
-    LL_TIM_ClearFlag_UPDATE(TIM2);
-    tim2_upd_callback();
-  }else{
-      LL_GPIO_ResetOutputPin(led_GPIO_Port,led_Pin);
-  }
+  tim2_irq_callback();
   /* USER CODE END TIM2_IRQn 0 */
   /* USER CODE BEGIN TIM2_IRQn 1 */
 

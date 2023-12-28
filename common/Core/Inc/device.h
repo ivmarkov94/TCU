@@ -2,14 +2,16 @@
 #ifndef DEVICE_H
 #define DEVICE_H
 #include "main.h"
-#include "time_utils.h"
+#include <stdio.h>
+#include "stdbool.h"
+#include <stdlib.h>
+#include <string.h>
 #include "stm32f103xb.h"
+#include "time_utils.h"
 
 #define UNKNOWN_ERROR 0xA0
 #define STACK_OVERFLOW_ERROR 0xA1
 #define REBOOT_INFO_AREA    (FLASH_BASE + 0xFC00)
-  
-
 #define ARRAY_SIZE(x)  (sizeof(x) / sizeof((x) [0]))
 
 #define WAIT(time_ms) \
