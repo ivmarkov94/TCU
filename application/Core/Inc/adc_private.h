@@ -2,6 +2,7 @@
 #ifndef ADC_PRIVATE_H
 #define ADC_PRIVATE_H
 #include "main.h"
+#include "adc.h"
 #define VDD        3318 /* mV */ 
 #define ADC_RES    VDD/4095.f /* mv/bit */
 #define DIV12V     5.4818 

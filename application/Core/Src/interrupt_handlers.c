@@ -1,9 +1,8 @@
 #include "interrupt_handlers.h"
+#include "adc_private.h"
 #include "device.h"
 #include "adc.h"
 #include "tim.h"
-#include "adc_private.h"
-
 
 void dma_irq_callback(void)
 {
@@ -22,7 +21,7 @@ void dma_irq_callback(void)
   }
 }
 
-void tim1_up_irq_callback(void);
+void tim1_up_irq_callback(void)
 {
   if(LL_TIM_IsActiveFlag_UPDATE(TIM1))
   {
