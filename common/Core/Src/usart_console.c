@@ -1,9 +1,10 @@
 #include "usart_console.h"
 #include "usart.h"
 #include "device.h"
-uart_t uart3;
-uint8_t tx_buffer[UART_TX_BUF];
-ring_buffer_t tx_ring_buf = {.buffer = tx_buffer, .size = UART_TX_BUF, .flag_overflow = 0, .flag_error_pop = 0};
+uint8_t tx_buf[UART_TX_BUF];
+uint8_t rx_buf[UART_RX_BUF];
+uart_t  uart3 = {.rx_fifo.buffer = rx_buf, .rx_fifo.size = UART_RX_BUF, .rx_fifo.flag_overflow = 0, .rx_fifo.flag_error_pop = 0,
+                 .tx_fifo.buffer = tx_buf, .tx_fifo.size = UART_TX_BUF, .tx_fifo.flag_overflow = 0, .tx_fifo.flag_error_pop = 0};
 
 /* function to use printf() */
 int _write(int file, char *ptr, int len)
@@ -11,18 +12,18 @@ int _write(int file, char *ptr, int len)
   uint16_t ind = 0;
   while (ind<len)
   {
-    ring_push(ptr[ind],&tx_ring_buf);
+    ring_push(ptr[ind],&uart3.tx_fifo);
     ind++;
   }
-  LL_USART_TransmitData8(USART3, ring_pop(&tx_ring_buf));
+  LL_USART_TransmitData8(USART3, ring_pop(&uart3.tx_fifo));
   return len;
 }
 
 void console_handler(void)
 {
-  if(uart_is_str_ready())
+  if(uart_is_cmd_ready())
   {
-    if(IS_CMD_RECIVED("wdt")) 
+    if(IS_CMD_MATCH("wdt")) 
     {
       while(1)
       {
@@ -32,44 +33,27 @@ void console_handler(void)
     {
       if(console_cmd()==false)
       {
-        printf("Unknowned cmd %s"NLINE"Cmd list:"NLINE"wdt"CONSOLE_HELP_CMD,(char*)&uart3.rx_buffer[0]);
+        printf("Unknowned cmd %s"NLINE"Cmd list:"NLINE"wdt"CONSOLE_HELP_CMD,(char*)uart3.rx_fifo.buffer);
       }
     }
-    uart_rx_buff_reset();
+    ring_clear(&uart3.rx_fifo);
   }
 }
 
-uint8_t is_cmd_recived(char* string, uint32_t size)
+uint8_t is_cmd_match(char* string, uint32_t size)
 {
   uint8_t result = false;
-  if(strncmp(string,(const char*)&uart3.rx_buffer[0], (size-1))==0)
+  if(strncmp(string,(const char*)uart3.rx_fifo.buffer, (size-1))==0)
   {
     result = true;
   }
   return result;
 }
-   
 
-void uart_buff_put_char(uint8_t data)
-{
-  if(uart3.last_indx < UART_RX_BUF)
-  {
-    uart3.rx_buffer[uart3.last_indx++] = data;
-    uart3.last_upd_ms = get_time_ms();
-  }else{
-    uart_rx_buff_reset();
-  }
-}
-
-void uart_rx_buff_reset(void)
-{
-  uart3.last_indx = 0u;
-}
-
-uint8_t uart_is_str_ready(void)
+uint8_t uart_is_cmd_ready(void)
 {
   uint8_t result = false;
-  if(time_elapsed_ms(uart3.last_upd_ms, 200) && uart3.last_indx!=0)
+  if(time_elapsed_ms(uart3.rx_fifo_upd_ms, TIME_BETWEEN_CMD_MS) && ring_get_count(&uart3.rx_fifo)!=0)
   {
     result = true;
   }

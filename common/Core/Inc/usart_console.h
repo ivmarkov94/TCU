@@ -5,23 +5,21 @@
 #include "usart.h"
 #include "ring_buffer.h"
 
-#define IS_CMD_RECIVED(string)\
-    is_cmd_recived(string, sizeof(string))
+#define TIME_BETWEEN_CMD_MS 200
+#define IS_CMD_MATCH(string)\
+    is_cmd_match(string, sizeof(string))
 
 typedef struct{
-  uint8_t rx_buffer[UART_RX_BUF];
-  uint8_t last_indx;
-  uint32_t last_upd_ms;
+  ring_buffer_t rx_fifo;
+  ring_buffer_t tx_fifo;
+  uint32_t rx_fifo_upd_ms;
 }uart_t;
 
-extern ring_buffer_t tx_ring_buf;
 extern uart_t uart3;
 
 void console_handler(void);
-uint8_t is_cmd_recived(char* string, uint32_t size);
+uint8_t uart_is_cmd_ready(void);
 int32_t get_int_arg(uint8_t* ptr);
 float get_float_arg(uint8_t* ptr);
-void uart_buff_put_char(uint8_t data);
-uint8_t uart_is_str_ready(void);
-void uart_rx_buff_reset(void);
+uint8_t is_cmd_match(char* string, uint32_t size);
 #endif /* USART_CONSOLE_H */

@@ -90,61 +90,61 @@ static dbg_var_e dbg_var;
 uint8_t console_cmd(void)
 {
   uint8_t result = true;
-  if(IS_CMD_RECIVED("adc1?"))
+  if(IS_CMD_MATCH("adc1?"))
   {
     dbg_var = dbg_var_adc_channels_scaled_part1;
     dbg_active ^=1;
-  }else if(IS_CMD_RECIVED("adc2?"))
+  }else if(IS_CMD_MATCH("adc2?"))
   {
     dbg_var = dbg_var_adc_channels_scaled_part2;
     dbg_active ^=1;
-  }else if(IS_CMD_RECIVED("adcr1?"))
+  }else if(IS_CMD_MATCH("adcr1?"))
   {
     dbg_var = dbg_var_adc_channels_raw_part1;
     dbg_active ^=1;
-  }else if(IS_CMD_RECIVED("adcr2?"))
+  }else if(IS_CMD_MATCH("adcr2?"))
   {
     dbg_var = dbg_var_adc_channels_raw_part2;
     dbg_active ^=1;
-  }else if(IS_CMD_RECIVED("amp?"))
+  }else if(IS_CMD_MATCH("amp?"))
   {
     dbg_var = dbg_var_amplifier_dif_input;
     dbg_active ^=1;
-  }else if(IS_CMD_RECIVED("dbg_base"))
+  }else if(IS_CMD_MATCH("dbg_base"))
   {
     dbg_var = dbg_var_base;
     dbg_active ^=1;
-  }else if(IS_CMD_RECIVED("p="))
+  }else if(IS_CMD_MATCH("p="))
   {
     pid_set_p((get_float_arg(&uart3.rx_buffer[2])));
-  }else if(IS_CMD_RECIVED("d="))
+  }else if(IS_CMD_MATCH("d="))
   {
     pid_set_d(get_float_arg(&uart3.rx_buffer[2]));
-  }else if(IS_CMD_RECIVED("i="))
+  }else if(IS_CMD_MATCH("i="))
   {
     pid_set_i(get_float_arg(&uart3.rx_buffer[2]));
-  }else if(IS_CMD_RECIVED("inpwm?"))
+  }else if(IS_CMD_MATCH("inpwm?"))
   {
     printf("T=%6.1fms, f=%5.1fHz"NLINE,pwm_capt.pwm_period_us/1000.f, 1000.f/(pwm_capt.pwm_period_us/1000.f));
-  }else if(IS_CMD_RECIVED("c_bmw"))
+  }else if(IS_CMD_MATCH("c_bmw"))
   {
     control_system_set_state(bmw_control);
-  }else if(IS_CMD_RECIVED("c_cust"))
+  }else if(IS_CMD_MATCH("c_cust"))
   {
     control_system_set_state(custom_control);
-  }else if(IS_CMD_RECIVED("c_off"))
+  }else if(IS_CMD_MATCH("c_off"))
   {
     control_system_set_state(off_control);
-  }else if(IS_CMD_RECIVED("tm1"))
+  }else if(IS_CMD_MATCH("tm1"))
   {
     control_system_set_state(test_mode1_low_duty);
-  }else if(IS_CMD_RECIVED("tm2"))
+  }else if(IS_CMD_MATCH("tm2"))
   {
     control_system_set_state(test_mode2_high_duty);
-  }else if(IS_CMD_RECIVED("st?"))/* selftest print */
+  }else if(IS_CMD_MATCH("st?"))/* selftest print */
   {
     selftest_print_errors();
-  }else if(IS_CMD_RECIVED("st_wh"))/* selftest whole test */
+  }else if(IS_CMD_MATCH("st_wh"))/* selftest whole test */
   {
     selftest_set_print_all(true);
     selftest_whole_test();

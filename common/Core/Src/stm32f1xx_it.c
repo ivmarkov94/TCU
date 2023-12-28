@@ -293,14 +293,21 @@ void USART3_IRQHandler(void)
   if(LL_USART_IsActiveFlag_RXNE(USART3))
   {
     LL_USART_ClearFlag_RXNE(USART3);
-    uart_buff_put_char((uint8_t)USART3->DR);
+    uart3.rx_fifo_upd_ms = get_time_ms();
+    if(ring_get_count(&uart3.rx_fifo) < uart3.rx_fifo.size)
+    {
+      ring_push((uint8_t)USART3->DR, &uart3.rx_fifo);
+    }else{
+      printf("Error rx_buf overflow, reset rx buffer"NLINE);
+      ring_clear(&uart3.rx_fifo);
+    }
   }
   if(LL_USART_IsActiveFlag_TC(USART3))
   {
     LL_USART_ClearFlag_TC(USART3);
-    if(ring_get_count(&tx_ring_buf)>0u)
+    if(ring_get_count(&uart3.tx_fifo)>0u)
     {
-      LL_USART_TransmitData8(USART3, ring_pop(&tx_ring_buf));
+      LL_USART_TransmitData8(USART3, ring_pop(&uart3.tx_fifo));
     }
   }
   if(LL_USART_IsActiveFlag_ORE(USART3))
