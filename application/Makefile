@@ -195,7 +195,7 @@ $(BUILD_DIR)/%.hex: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
 $(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf | $(BUILD_DIR)	
 	$(BIN) $< $@
 	
-$(BUILD_DIR)/%.ld: $(LDSCRIPT_BASE) $(MAKEFILE_LIST)
+$(BUILD_DIR)/%.ld: $(LDSCRIPT_BASE) $(MAKEFILE_LIST) | $(BUILD_DIR)
 	$(LD) c $< $(C_DEFS) -o $@ 	 
 	
 $(BUILD_DIR):
