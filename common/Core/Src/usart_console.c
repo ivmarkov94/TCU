@@ -61,8 +61,17 @@ void console_handler(void)
       internal_flash_lock();
       /* Next, we will have a reboot. The reason is WWDG */
     }else if(IS_CMD_MATCH("time?")){
-      uint32_t s = get_time_ms()/1000;
-      printf("%3ld:%2ld:%2ld"NLINE,s/3600, (s%3600)/60, ((s%3600)%60));
+      uint32_t s_raw = get_time_ms()/1000;
+      uint32_t h,m,s; 
+      h = s_raw/3600;
+      m = (s_raw%3600)/60;
+      s = ((s_raw%3600)%60);
+      if(h<=9)printf("0");
+      printf("%1ld:",h);
+      if(m<=9)printf("0");
+      printf("%1ld:",m);
+      if(s<=9)printf("0");
+      printf("%1ld"NLINE,s);
     }else
     {
       if(console_cmd()==false)
