@@ -60,6 +60,9 @@ void console_handler(void)
       internal_flash_Erase(REBOOT_INFO_AREA);
       internal_flash_lock();
       /* Next, we will have a reboot. The reason is WWDG */
+    }else if(IS_CMD_MATCH("time?")){
+      uint32_t s = get_time_ms()/1000;
+      printf("%3ld:%2ld:%2ld"NLINE,s/3600, (s%3600)/60, ((s%3600)%60));
     }else
     {
       if(console_cmd()==false)
@@ -71,6 +74,7 @@ void console_handler(void)
 #endif /* CHECK_STACK_HEAP */
         NLINE"hwer"
         NLINE"clhwe"
+        NLINE"time?"
         CONSOLE_HELP_CMD,(char*)uart3.rx_fifo.buffer);
       }
     }
