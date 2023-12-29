@@ -61,7 +61,11 @@ void TIM1_CC_IRQHandler(void);
 void TIM2_IRQHandler(void);
 void USART3_IRQHandler(void);
 /* USER CODE BEGIN EFP */
-
+#ifdef CHECK_STACK_HEAP
+void init_stack_check();
+void init_heap_check();
+void stack_heap_print_st(void);
+#endif /* CHECK_STACK_HEAP */
 /* USER CODE END EFP */
 
 #ifdef __cplusplus

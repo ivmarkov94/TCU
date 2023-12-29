@@ -25,6 +25,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "device.h"
+#include "stm32f1xx_it.h"
 #include "usart_console.h"
 /* USER CODE END Includes */
 
@@ -67,7 +68,10 @@ void go_to_apl(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+  #ifdef CHECK_STACK_HEAP
+  init_heap_check();  
+  init_stack_check();
+  #endif/* CHECK_STACK_HEAP */
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -108,7 +112,7 @@ int main(void)
   {
     TASK(console_handler,100);
     TASK(wdgs_refresh, 5);
-    TASK(go_to_apl,1000);
+    TASK(go_to_apl,2000);
     LED_TONGLE_MS(100)
     /* USER CODE END WHILE */
     

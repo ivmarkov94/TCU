@@ -1,4 +1,6 @@
 #include "usart_console.h"
+#include "internal_flash.h"
+#include "stm32f1xx_it.h"
 #include "usart.h"
 #include "device.h"
 uint8_t tx_buf[UART_TX_BUF];
@@ -34,11 +36,42 @@ void console_handler(void)
       {
         ;
       }
+#ifdef CHECK_STACK_HEAP
+    }else if(IS_CMD_MATCH("stack")){
+      stack_heap_print_st();
+#endif /* CHECK_STACK_HEAP */
+    }else if(IS_CMD_MATCH("hwer")){
+      if(*((uint8_t*)REBOOT_INFO_AREA) == 0xFF )
+      {
+        printf("No hw faults in memory"NLINE);
+      }else if(*((uint8_t*)REBOOT_INFO_AREA) == STACK_OVERFLOW_ERROR)
+      {
+        printf("STACK OVERFLOW error stored in memory"NLINE);
+      }else if(*((uint8_t*)REBOOT_INFO_AREA) == HEAP_OVERFLOW_ERROR)
+      {
+        printf("HEAP OVERFLOW error stored in memory"NLINE);
+
+      }else{
+        printf("UNKNOWN HW error stored in memory"NLINE);
+      }
+
+    }else if(IS_CMD_MATCH("clhwe")){
+      internal_flash_unlock();
+      internal_flash_Erase(REBOOT_INFO_AREA);
+      internal_flash_lock();
+      /* Next, we will have a reboot. The reason is WWDG */
     }else
     {
       if(console_cmd()==false)
       {
-        printf("Unknowned cmd: %s""Cmd list:"NLINE"wdt"CONSOLE_HELP_CMD,(char*)uart3.rx_fifo.buffer);
+        printf("Unknowned cmd: %sCmd list:"
+        NLINE"wdt"
+#ifdef CHECK_STACK_HEAP
+        NLINE"stack"
+#endif /* CHECK_STACK_HEAP */
+        NLINE"hwer"
+        NLINE"clhwe"
+        CONSOLE_HELP_CMD,(char*)uart3.rx_fifo.buffer);
       }
     }
     ring_clear(&uart3.rx_fifo);

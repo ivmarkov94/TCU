@@ -29,6 +29,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "device.h"
+#include "stm32f1xx_it.h"
 #include "pid_regulator.h"
 #include "usart_console.h"
 #include "selftest.h"
@@ -73,7 +74,10 @@ void SystemClock_Config(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+#ifdef CHECK_STACK_HEAP
+  init_heap_check();  
+  init_stack_check();
+#endif/* CHECK_STACK_HEAP */
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -113,6 +117,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   WAIT(1000); /* wait to finish all transient process */
   LL_GPIO_SetOutputPin(led_GPIO_Port,led_Pin);/* Disable green led */
+  
   selftest_whole_test();
   /* USER CODE END 2 */
 

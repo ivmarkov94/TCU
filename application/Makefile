@@ -25,6 +25,8 @@ ROOT := $(PATH_PROJECT)/..
 DEBUG = 1
 # optimization
 OPT = -Og
+# checking stack and heap sizes
+CHECK_STACK_HEAP = Y
 
 
 #######################################
@@ -151,6 +153,9 @@ ifeq ($(DEBUG), 1)
 CFLAGS += -g -gdwarf-2
 endif
 
+ifeq ($(CHECK_STACK_HEAP), Y)
+C_DEFS += -DCHECK_STACK_HEAP
+endif
 
 # Generate dependency information
 CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"

@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
+#include "stm32f1xx_it.h"
 #include "main.h"
 #include "usart_console.h"
 #include "internal_flash.h"
@@ -43,12 +44,16 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-
+static uint32_t heap_overflow  = 0;
+static uint32_t stack_overflow = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN PFP */
-
+#ifdef CHECK_STACK_HEAP
+void heap_check_handler();
+void stack_check_handler();
+#endif /* CHECK_STACK_HEAP */
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -108,9 +113,11 @@ void HardFault_Handler(void)
   static uint8_t  error_code[2] = {0xFF,0xFF};
   if(*((uint8_t*)REBOOT_INFO_AREA) == 0xFF )
   {
-    if(__get_MSP()<=SRAM_BASE)
+    if(stack_overflow)
     {
       error_code[0] = STACK_OVERFLOW_ERROR;
+    }else if(heap_overflow){
+      error_code[0] = HEAP_OVERFLOW_ERROR;
     }else{
       error_code[0] = UNKNOWN_ERROR;
     }
@@ -215,7 +222,18 @@ void SysTick_Handler(void)
 {
   /* USER CODE BEGIN SysTick_IRQn 0 */
   extern volatile uint32_t timer_ms;
+
   timer_ms += 1U;
+
+#ifdef CHECK_STACK_HEAP
+  static uint32_t check_timer_ms;
+  if((check_timer_ms+50/* ms */)<timer_ms)
+  {
+    check_timer_ms = timer_ms;
+    heap_check_handler();
+    stack_check_handler();
+  }
+#endif /* CHECK_STACK_HEAP */
   /* USER CODE END SysTick_IRQn 0 */
 
   /* USER CODE BEGIN SysTick_IRQn 1 */
@@ -322,5 +340,70 @@ void USART3_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
+#ifdef CHECK_STACK_HEAP
+#define START_STACK_FILLED_SIZE 32/* bytes */
+#define INIT_WORD_VAL 0x1F
 
+extern uint32_t __heap_start__;
+extern uint32_t __heap_end__;
+extern uint32_t __stack_end__;
+extern uint32_t _estack;/* stack top */
+
+static uint32_t stack_occupied = START_STACK_FILLED_SIZE;
+static uint32_t heap_occupied  = 0;
+static uint32_t heap_size;
+static uint32_t stack_size;
+volatile uint8_t* hp_ptr;
+volatile uint8_t* st_ptr;
+void init_heap_check()
+{
+  __disable_irq();
+  heap_size = (uint32_t)&__heap_end__ - (uint32_t)&__heap_start__;
+  hp_ptr =  (volatile uint8_t*)&__heap_start__;
+  memset((uint8_t*)hp_ptr, INIT_WORD_VAL, heap_size);
+  __enable_irq();
+}
+
+void init_stack_check()
+{
+  __disable_irq();
+  stack_size = (uint32_t)&__stack_end__ - (uint32_t)&__heap_end__;
+  st_ptr = (uint8_t*)((uint32_t)&_estack-stack_size);
+  memset((uint8_t*)st_ptr, INIT_WORD_VAL, (stack_size-START_STACK_FILLED_SIZE));
+  __enable_irq();
+}
+
+void heap_check_handler()
+{
+  if(heap_occupied < heap_size)
+  {
+    while(*((uint8_t*)(&__heap_start__+heap_occupied)) != INIT_WORD_VAL)
+    {
+      heap_occupied++;/* bytes */
+    }
+  }else{
+    heap_overflow = 1;
+    HardFault_Handler();
+  }
+}
+
+void stack_check_handler()
+{
+  if(stack_occupied < stack_size)
+  {
+    while(*((uint8_t*)(&_estack-stack_occupied)) != INIT_WORD_VAL)
+    {
+      stack_occupied++;/* bytes */
+    }
+  }else{
+    stack_overflow = 1;
+    HardFault_Handler();
+  }
+}
+
+void stack_heap_print_st(void)
+{
+  printf("stack:%ldB/%ldB=>%3ld%% heap:%ldB/%ldB=>%3ld%%"NLINE,stack_occupied,stack_size,(stack_occupied*100)/stack_size, heap_occupied,heap_size,(heap_occupied*100)/heap_size);
+}
+#endif /* CHECK_STACK_HEAP */
 /* USER CODE END 1 */

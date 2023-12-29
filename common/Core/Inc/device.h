@@ -11,6 +11,7 @@
 
 #define UNKNOWN_ERROR 0xA0
 #define STACK_OVERFLOW_ERROR 0xA1
+#define HEAP_OVERFLOW_ERROR  0xA2
 #define REBOOT_INFO_AREA    (FLASH_BASE + 0xFC00)
 #define ARRAY_SIZE(x)  (sizeof(x) / sizeof((x) [0]))
 

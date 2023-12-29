@@ -53,12 +53,12 @@
 ENTRY(Reset_Handler)
 
 /* Generate a link error if heap and stack don't fit into RAM */
-_Min_Heap_Size = 0x0;      /* required amount of heap  */
-_Min_Stack_Size = 0x1000;  /* required amount of stack */
+_Min_Heap_Size  = 0x400;      /* required amount of heap  */
+_Min_Stack_Size = 0x800;  /* required amount of stack */
 
 /* Highest address of the user mode stack */
-_estack = ORIGIN(RAM) + _Min_Stack_Size;    /* end of RAM */
-
+_estack = ORIGIN(RAM) + LENGTH(RAM);    /* end of RAM */
+_stack_end = _estack - _Min_Stack_Size; 
 /* Specify the memory areas */
 MEMORY
 {
@@ -134,17 +134,6 @@ SECTIONS
   /* used by the startup to initialize data */
   _sidata = LOADADDR(.data);
 
-  /* User_heap_stack section, used to check that there is enough RAM left */
-  ._user_heap_stack :
-  {
-    . = ALIGN(8);
-    PROVIDE ( end = . );
-    PROVIDE ( _end = . );
-    . = . + _Min_Heap_Size;
-    . = . + _Min_Stack_Size;
-    . = ALIGN(8);
-  } >RAM
-
   /* Initialized data sections goes into RAM, load LMA copy after code */
   .data : 
   {
@@ -174,7 +163,19 @@ SECTIONS
     __bss_end__ = _ebss;
   } >RAM
 
-
+  /* User_heap_stack section, used to check that there is enough RAM left */
+  ._user_heap_stack :
+  {
+    . = ALIGN(8);
+    PROVIDE ( end = . );
+    PROVIDE ( _end = . );
+    __heap_start__ = .;         /* define a global symbol at start */
+    . = . + _Min_Heap_Size;
+    __heap_end__ = .;         /* define a global symbol at end */
+    . = . + _Min_Stack_Size;
+    __stack_end__ = .;         /* define a global symbol at end */
+    . = ALIGN(8);
+  } >RAM
   
 
   /* Remove information from the standard libraries */
