@@ -113,7 +113,7 @@ void HardFault_Handler(void)
   static uint8_t  error_code[2] = {0xFF,0xFF};
   if(*((uint8_t*)REBOOT_INFO_AREA) == 0xFF )
   {
-    if(stack_overflow)
+    if(stack_overflow || (__get_MSP() <= SRAM_BASE))
     {
       error_code[0] = STACK_OVERFLOW_ERROR;
     }else if(heap_overflow){
@@ -342,11 +342,11 @@ void USART3_IRQHandler(void)
 /* USER CODE BEGIN 1 */
 #ifdef CHECK_STACK_HEAP
 #define START_STACK_FILLED_SIZE 32/* bytes */
-#define INIT_WORD_VAL 0x1F
+#define INIT_BYTE 0x4C
+const uint32_t init_word = 0x4C4C4C4C;
 
-extern uint32_t __heap_start__;
-extern uint32_t __heap_end__;
-extern uint32_t __stack_end__;
+extern uint32_t _heap_start_addr;
+extern uint32_t _heap_end_addr;
 extern uint32_t _estack;/* stack top */
 
 static uint32_t stack_occupied = START_STACK_FILLED_SIZE;
@@ -358,32 +358,35 @@ volatile uint8_t* st_ptr;
 void init_heap_check()
 {
   __disable_irq();
-  heap_size = (uint32_t)&__heap_end__ - (uint32_t)&__heap_start__;
-  hp_ptr =  (volatile uint8_t*)&__heap_start__;
-  memset((uint8_t*)hp_ptr, INIT_WORD_VAL, heap_size);
+  heap_size = (uint32_t)&_heap_end_addr - (uint32_t)&_heap_start_addr;
+  hp_ptr =  (volatile uint8_t*)&_heap_start_addr;
+  memset((uint8_t*)hp_ptr, INIT_BYTE, heap_size);
   __enable_irq();
 }
 
 void init_stack_check()
 {
   __disable_irq();
-  stack_size = (uint32_t)&__stack_end__ - (uint32_t)&__heap_end__;
+  stack_size = (uint32_t)&_estack - (uint32_t)&_heap_end_addr;
   st_ptr = (uint8_t*)((uint32_t)&_estack-stack_size);
-  memset((uint8_t*)st_ptr, INIT_WORD_VAL, (stack_size-START_STACK_FILLED_SIZE));
+  memset((uint8_t*)st_ptr, INIT_BYTE, (stack_size-START_STACK_FILLED_SIZE));
   __enable_irq();
 }
 
 void heap_check_handler()
 {
-  if(heap_occupied < heap_size)
+  if(heap_size!=0)
   {
-    while(*((uint8_t*)(&__heap_start__+heap_occupied)) != INIT_WORD_VAL)
+    if(heap_occupied < heap_size)
     {
-      heap_occupied++;/* bytes */
+      while((*((uint32_t*)((uint32_t)&_heap_start_addr+heap_occupied)) != init_word))
+      {
+        heap_occupied++;/* bytes */
+      }
+    }else{
+      heap_overflow = 1;
+      HardFault_Handler();
     }
-  }else{
-    heap_overflow = 1;
-    HardFault_Handler();
   }
 }
 
@@ -391,7 +394,7 @@ void stack_check_handler()
 {
   if(stack_occupied < stack_size)
   {
-    while(*((uint8_t*)(&_estack-stack_occupied)) != INIT_WORD_VAL)
+    while(*((uint32_t*)((uint32_t)&_estack-stack_occupied)) != init_word)
     {
       stack_occupied++;/* bytes */
     }

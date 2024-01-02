@@ -149,6 +149,33 @@ uint8_t console_cmd(void)
     selftest_set_print_all(true);
     selftest_whole_test();
     selftest_set_print_all(false);
+  }else if(IS_CMD_MATCH("mem="))/* selftest whole test */
+  {
+    extern uint32_t _estack;/* stack top */
+    extern uint32_t _heap_start_addr;
+    int32_t mem16bcount = get_int_arg(&uart3.rx_fifo.buffer[4]);
+    printf("MEM_INFO:");
+    for(int32_t j = 0; j < 16; j++)
+    {
+      if (j<=0xF)printf("0");
+      printf("%lx ", j);
+    }
+    printf(NLINE);
+    for(int32_t i=0; i < mem16bcount; i++)
+    {
+      if(((uint32_t)(&_heap_start_addr)+(i*0x10)) < (uint32_t)(&_estack))
+      {
+        printf("%lx:",((uint32_t)(&_heap_start_addr)+(i*0x10)));
+        for(int32_t j = 0; j < 16; j++)
+        {
+          uint8_t val =  *((uint8_t*)((uint32_t)(&_heap_start_addr)+(i*0x10)+j));
+          if (val<=0xF)printf("0");
+          printf("%x ", val);
+        }
+        printf(NLINE);
+        WAIT(10);
+      }
+    }
   }else
   {
     result = false;
