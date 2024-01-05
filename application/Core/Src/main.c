@@ -54,6 +54,7 @@
 
 /* USER CODE BEGIN PV */
 extern uint16_t dma_buffer[];
+volatile uint64_t flash_signature __attribute__((section(".flash_info"))) __attribute__((used)) = FW_SIGNATURE;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/

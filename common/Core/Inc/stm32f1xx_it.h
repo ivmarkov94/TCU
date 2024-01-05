@@ -43,6 +43,7 @@
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
 #define REQ_FROM_APP 0xA3C1
+#define FW_SIGNATURE 0x14C8531B
 extern uint32_t app_call_st;
 /* USER CODE END EM */
 

@@ -48,6 +48,7 @@
 
 /* USER CODE BEGIN PV */
 extern uint16_t dma_buffer[];
+extern uint32_t __isr_vector_end;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -106,7 +107,13 @@ int main(void)
   if(app_call_st == REQ_FROM_APP){
     app_call_st = 0;
   }else{
-    go_to_app();
+    volatile uint32_t fw_signature_addr = (uint32_t)&__isr_vector_end - FLASH_BASE;
+    fw_signature_addr += fw_signature_addr%8;
+    fw_signature_addr += APL_START_ADDRES;
+    if(*((uint64_t*)fw_signature_addr) == FW_SIGNATURE)
+    {
+      go_to_app();
+    }
   }
   printf("bootloader started"NLINE);
   /* USER CODE END 2 */
