@@ -21,7 +21,6 @@ else
 	FW_MAX_SIZE = $(FLASH_MAX_SIZE)
 	FW_NAME = APPLICATION
 endif
-C_DEFS += -DFW_NAME
 
 # For LD file preprocessoring. 
 C_DEFS += -DFW_MAX_SIZE=$(FW_MAX_SIZE)  

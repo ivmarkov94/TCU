@@ -103,8 +103,8 @@ int main(void)
   MX_IWDG_Init();
   /* USER CODE BEGIN 2 */
   LL_GPIO_SetOutputPin(led_GPIO_Port,led_Pin);/* Disable green led */
-  if(app_call_st == true){
-    app_call_st = true;
+  if(app_call_st == REQ_FROM_APP){
+    app_call_st = 0;
   }else{
     go_to_app();
   }

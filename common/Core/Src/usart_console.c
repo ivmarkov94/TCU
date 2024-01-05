@@ -73,7 +73,7 @@ void console_handler(void)
       if(s<=9)printf("0");
       printf("%1ld"NLINE,s);
     }else if (IS_CMD_MATCH("fw_st?")){
-#if FW_NAME == BOOTLOADER
+#ifdef BOOTLOADER
       printf("BL" NLINE);
 #else
       printf("APP" NLINE);

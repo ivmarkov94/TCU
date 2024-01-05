@@ -24,6 +24,7 @@
 #include "device.h"
 #include "tim.h"
 #include "adc.h"
+#include "stm32f1xx_it.h"
 #include "pid_regulator.h"
 #include "usart_console.h"
 #include "selftest.h"
@@ -151,7 +152,10 @@ uint8_t console_cmd(void)
     selftest_set_print_all(false);
   }else if(IS_CMD_MATCH("go_to_bl"))/* selftest whole test */
   {
-    go_to_bl();
+    while(1)
+    {
+      app_call_st = REQ_FROM_APP;
+    }
   }else if(IS_CMD_MATCH("mem="))/* selftest whole test */
   {
     extern uint32_t _estack;/* stack top */

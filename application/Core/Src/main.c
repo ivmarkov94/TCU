@@ -190,23 +190,6 @@ void wdgs_refresh(void)
   wwdg_refresh();
   iwdg_refresh();
 }
-
-void go_to_bl(void)
-{
-  uint32_t app_jump_addr;
-	void (*go2app)(void);
-
-  __disable_irq();
-  LL_RCC_DeInit();
-  LL_USART_DeInit(USART3);
-  app_call_st = true;
-	app_jump_addr = *((volatile uint32_t*) (FLASH_BASE + 4));/* getting address application Reset Handler() */
-	go2app = (void (*)(void))app_jump_addr;
-	__set_MSP(*((volatile uint32_t*)(FLASH_BASE))); /* load init address to Stack Point */
-  wdgs_refresh();
-	go2app();
-}
-
 /* USER CODE END 4 */
 
 /**
