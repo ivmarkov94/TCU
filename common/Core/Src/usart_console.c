@@ -72,6 +72,12 @@ void console_handler(void)
       printf("%1ld:",m);
       if(s<=9)printf("0");
       printf("%1ld"NLINE,s);
+    }else if (IS_CMD_MATCH("fw_st?")){
+#if FW_NAME == BOOTLOADER
+      printf("BL" NLINE);
+#else
+      printf("APP" NLINE);
+#endif
     }else
     {
       if(console_cmd()==false)
@@ -84,6 +90,12 @@ void console_handler(void)
         NLINE"hwer"
         NLINE"clhwe"
         NLINE"time?"
+        NLINE"fw_st?"
+#if FW_NAME == BOOTLOADER
+        NLINE"go_to_app"
+#else
+        NLINE"go_to_bl"
+#endif        
         CONSOLE_HELP_CMD,(char*)uart3.rx_fifo.buffer);
       }
     }

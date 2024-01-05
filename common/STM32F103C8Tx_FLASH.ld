@@ -146,6 +146,16 @@ SECTIONS
     . = ALIGN(8);
   } >RAM
 
+  /* No init data section */
+  .noinit :
+  {
+    __noinit_start = .;
+    . = ALIGN(4);
+    *(.noinit)
+    . = ALIGN(4);
+    __noinit_end = .;
+  } >RAM
+
   /* Initialized data sections goes into RAM, load LMA copy after code */
   .data : 
   {

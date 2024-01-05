@@ -113,6 +113,7 @@ void Error_Handler(void);
 
 /* USER CODE BEGIN Private defines */
 void wdgs_refresh(void);
+void go_to_bl(void);
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

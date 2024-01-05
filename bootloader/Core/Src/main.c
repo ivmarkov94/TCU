@@ -53,7 +53,6 @@ extern uint16_t dma_buffer[];
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-void go_to_apl(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -104,6 +103,12 @@ int main(void)
   MX_IWDG_Init();
   /* USER CODE BEGIN 2 */
   LL_GPIO_SetOutputPin(led_GPIO_Port,led_Pin);/* Disable green led */
+  if(app_call_st == true){
+    app_call_st = true;
+  }else{
+    go_to_app();
+  }
+  printf("bootloader started"NLINE);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -112,7 +117,6 @@ int main(void)
   {
     TASK(console_handler,100);
     TASK(wdgs_refresh, 5);
-    TASK(go_to_apl,2000);
     LED_TONGLE_MS(100)
     /* USER CODE END WHILE */
     
@@ -172,7 +176,8 @@ void wdgs_refresh(void)
 {
   iwdg_refresh();
 }
-void go_to_apl(void)
+
+void go_to_app(void)
 {
   uint32_t app_jump_addr;
 	void (*go2app)(void);

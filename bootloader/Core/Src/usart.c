@@ -83,6 +83,13 @@ void MX_USART3_UART_Init(void)
 /* USER CODE BEGIN 1 */
 uint8_t console_cmd(void)
 {
-  return 0;
+  uint8_t result = true;
+  if(IS_CMD_MATCH("go_to_app"))/* selftest whole test */
+  {
+    go_to_app();
+  }else{
+    result = false;
+  }
+  return result;
 }
 /* USER CODE END 1 */

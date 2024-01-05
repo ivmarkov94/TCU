@@ -44,6 +44,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
+uint32_t app_call_st __attribute__((section(".noinit")));
 static uint32_t heap_overflow  = 0;
 static uint32_t stack_overflow = 0;
 /* USER CODE END PV */

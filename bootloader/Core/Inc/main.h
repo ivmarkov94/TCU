@@ -104,6 +104,7 @@ void Error_Handler(void);
 #endif
 
 /* USER CODE BEGIN Private defines */
+void go_to_app(void);
 void wdgs_refresh(void);
 /* USER CODE END Private defines */
 

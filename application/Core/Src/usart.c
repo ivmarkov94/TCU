@@ -149,6 +149,9 @@ uint8_t console_cmd(void)
     selftest_set_print_all(true);
     selftest_whole_test();
     selftest_set_print_all(false);
+  }else if(IS_CMD_MATCH("go_to_bl"))/* selftest whole test */
+  {
+    go_to_bl();
   }else if(IS_CMD_MATCH("mem="))/* selftest whole test */
   {
     extern uint32_t _estack;/* stack top */
