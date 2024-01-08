@@ -60,7 +60,6 @@ extern "C" {
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
-#define  NLINE "\r\n"
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/

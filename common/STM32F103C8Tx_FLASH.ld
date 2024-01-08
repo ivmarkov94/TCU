@@ -80,6 +80,7 @@ SECTIONS
   .flash_info :
   {
     KEEP(*(.flash_info))
+    . = ALIGN(16);
   } >FLASH
 
   /* The program code and other data goes into FLASH */

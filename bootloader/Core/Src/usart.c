@@ -22,6 +22,7 @@
 
 /* USER CODE BEGIN 0 */
 #include "device.h"
+#include "bl_logic.h"
 #include "usart_console.h"
 /* USER CODE END 0 */
 
@@ -84,9 +85,21 @@ void MX_USART3_UART_Init(void)
 uint8_t console_cmd(void)
 {
   uint8_t result = true;
-  if(IS_CMD_MATCH("go_to_app"))/* selftest whole test */
+  if(IS_CMD_MATCH("go_to_app"))
   {
     go_to_app();
+  }else if(IS_CMD_MATCH_WITH_CRC( BL_CMD_SET_FLASH_ADDR ))
+  {
+    set_flash_address(get_int_arg(&uart3.rx_fifo.buffer[5], false));
+  }else if(IS_CMD_MATCH_WITH_CRC( BL_CMD_SET_FLASH_FRAME_SIZE ))
+  {
+    set_flash_frame_size(get_int_arg(&uart3.rx_fifo.buffer[5], false));
+  }else if(IS_CMD_MATCH_WITH_CRC( BL_CMD_ERASE_FLASH ))
+  {
+    erase_flash();
+  }else if(IS_CMD_MATCH_WITH_CRC( BL_CMD_GET_AND_FLASH_FW_FRAME ))
+  {
+    get_fw_frame();
   }else{
     result = false;
   }

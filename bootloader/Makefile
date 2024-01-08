@@ -47,6 +47,7 @@ Core/Src/main.c \
 Core/Src/gpio.c \
 Core/Src/usart.c \
 Core/Src/iwdg.c \
+Core/Src/bl_logic.c \
 $(ROOT)/common/Core/Src/stm32f1xx_it.c \
 $(ROOT)/common/Core/Src/usart_console.c \
 $(ROOT)/common/Drivers/system_stm32f1xx.c \

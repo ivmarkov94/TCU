@@ -1,5 +1,6 @@
 import serial
 import time
+from typing import Dict, List
 NLINE = "\r\n"
 
 class ComPortConsole:
@@ -26,10 +27,12 @@ class ComPortConsole:
     def close(self):
         self.serialDut.close()
 
-    def rx_line(self, rx_timeout=0.1):
+    def rx_line(self, rx_timeout=0.4, cmd_len=-1, end=NLINE):
         if self.initialised is True:
+            if cmd_len != -1:
+                cmd_len += len(end)
             self.serialDut.timeout = rx_timeout
-            return self.serialDut.readline()
+            return self.serialDut.readline(cmd_len).decode(errors="ignore").replace(end,"")
 
     def rx_lines(self, exp_str="", rx_timeout=0.3) -> str:
         if self.initialised is True:
@@ -41,11 +44,16 @@ class ComPortConsole:
             self.serialDut.timeout = rx_timeout
             return self.serialDut.read(str_len).decode(errors="ignore")
 
-    def tx_line(self, cmd, end=NLINE) -> str:
+    def tx_line(self, cmd, end=NLINE):
         if self.initialised is True:
             cmd += end
             self.serialDut.reset_input_buffer()
             self.serialDut.write(str.encode(cmd))
+
+    def tx_data(self, date_list:List[int]):
+        if self.initialised is True:
+            self.serialDut.reset_input_buffer()
+            self.serialDut.write(bytes(date_list))
 
 
 if __name__ == "__main__":

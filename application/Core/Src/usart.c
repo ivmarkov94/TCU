@@ -117,13 +117,13 @@ uint8_t console_cmd(void)
     dbg_active ^=1;
   }else if(IS_CMD_MATCH("p="))
   {
-    pid_set_p((get_float_arg(&uart3.rx_fifo.buffer[2])));
+    pid_set_p((get_float_arg(&uart3.rx_fifo.buffer[2], true)));
   }else if(IS_CMD_MATCH("d="))
   {
-    pid_set_d(get_float_arg(&uart3.rx_fifo.buffer[2]));
+    pid_set_d(get_float_arg(&uart3.rx_fifo.buffer[2], true));
   }else if(IS_CMD_MATCH("i="))
   {
-    pid_set_i(get_float_arg(&uart3.rx_fifo.buffer[2]));
+    pid_set_i(get_float_arg(&uart3.rx_fifo.buffer[2], true));
   }else if(IS_CMD_MATCH("inpwm?"))
   {
     printf("T=%6.1fms, f=%5.1fHz"NLINE,pwm_capt.pwm_period_us/1000.f, 1000.f/(pwm_capt.pwm_period_us/1000.f));
@@ -150,7 +150,7 @@ uint8_t console_cmd(void)
     selftest_set_print_all(true);
     selftest_whole_test();
     selftest_set_print_all(false);
-  }else if(IS_CMD_MATCH("go_to_bl"))/* selftest whole test */
+  }else if(IS_CMD_MATCH("go_to_bl") || IS_CMD_MATCH("_gbl"))/* selftest whole test */
   {
     while(1)
     {
@@ -160,7 +160,7 @@ uint8_t console_cmd(void)
   {
     extern uint32_t _estack;/* stack top */
     extern uint32_t _heap_start_addr;
-    int32_t mem16bcount = get_int_arg(&uart3.rx_fifo.buffer[4]);
+    int32_t mem16bcount = get_int_arg(&uart3.rx_fifo.buffer[4], true);
     printf("MEM_INFO:");
     for(int32_t j = 0; j < 16; j++)
     {

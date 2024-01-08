@@ -21,7 +21,7 @@ void internal_flash_lock(void)
 void internal_flash_Erase(uint32_t pageAddress) {
 	while (FLASH->SR & FLASH_SR_BSY)
     {
-        wdgs_refresh();
+		;
     }
 	if (FLASH->SR & FLASH_SR_EOP) {
 		FLASH->SR |= FLASH_SR_EOP;
@@ -32,7 +32,7 @@ void internal_flash_Erase(uint32_t pageAddress) {
 	FLASH->CR |= FLASH_CR_STRT;
 	while (!(FLASH->SR & FLASH_SR_EOP))
     {
-        wdgs_refresh();
+       ;
     }
 	FLASH->SR |= FLASH_SR_EOP;
 	FLASH->CR &= ~FLASH_CR_PER;
@@ -40,7 +40,7 @@ void internal_flash_Erase(uint32_t pageAddress) {
 
 void internal_flash_Write(uint8_t* data, uint32_t address, uint32_t count) {
 	while (FLASH->SR & FLASH_SR_BSY){
-        wdgs_refresh();
+        ;
     }
 	if (FLASH->SR & FLASH_SR_EOP) {
 		FLASH->SR |= FLASH_SR_EOP;
@@ -51,9 +51,10 @@ void internal_flash_Write(uint8_t* data, uint32_t address, uint32_t count) {
 	for (uint32_t i = 0; i < count; i += 2) {
 		*(volatile uint16_t*)(address + i) = (((uint16_t)data[i + 1]) << 8) + data[i];
 		while (!(FLASH->SR & FLASH_SR_EOP)){
-            wdgs_refresh();
+            ;
         }
 		FLASH->SR |= FLASH_SR_EOP;
+		wdgs_refresh();
 	}
 
 	FLASH->CR &= ~(FLASH_CR_PG);

@@ -72,7 +72,7 @@ void console_handler(void)
       printf("%1ld:",m);
       if(s<=9)printf("0");
       printf("%1ld"NLINE,s);
-    }else if (IS_CMD_MATCH("fw_st?")){
+    }else if (IS_CMD_MATCH("fw_st?") || IS_CMD_MATCH("_fws")){
 #ifdef BOOTLOADER
       printf("BL" NLINE);
 #else
@@ -113,6 +113,17 @@ uint8_t is_cmd_match(char* string, uint32_t size)
   return result;
 }
 
+uint8_t is_cmd_match_with_crc(char* string, uint32_t size)
+{
+  uint8_t result = false;
+  
+  if(hex_crc_check(uart3.rx_fifo.buffer, ring_get_count(&uart3.rx_fifo)-NLINE_SIZE))
+  {
+    result = is_cmd_match(string, size);
+  }
+  return result;
+}
+
 uint8_t uart_is_cmd_ready(void)
 {
   uint8_t result = false;
@@ -123,16 +134,30 @@ uint8_t uart_is_cmd_ready(void)
   return result;
 }
 
-int32_t get_int_arg(uint8_t* ptr)
+int32_t get_int_arg(uint8_t* ptr, bool print_answ)
 {
   int32_t val = atoi((const char*)ptr);
-  printf("Updated to = %ld"NLINE,val);
+  if(print_answ){
+    printf("%ld"NLINE,val);
+  }
   return val;
 }
 
-float get_float_arg(uint8_t* ptr)
+float get_float_arg(uint8_t* ptr, bool print_answ)
 {
   float val = atof((const char*)ptr);
-  printf("Updated to = %5.3f"NLINE,val);
+  if(print_answ){
+    printf("%5.3f"NLINE,val);
+  }
   return val;
+}
+
+uint8_t hex_crc_check(uint8_t *ptr, uint32_t size)
+{
+    uint8_t sum = 0;
+    for (int i = 0; i < size; i++)
+    {
+        sum += (uint8_t)ptr[i];
+    }
+    return (sum==0)?1:0;
 }

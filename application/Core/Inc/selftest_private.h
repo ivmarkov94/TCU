@@ -2,6 +2,7 @@
 #define SELFTEST_PRIVATE
 #include "device.h"
 #include "adc.h"
+#include "usart_console.h"
 
 typedef enum{
     st_adc,

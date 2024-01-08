@@ -31,7 +31,7 @@ extern "C" {
 /* USER CODE BEGIN Includes */
 #include "stdio.h"
 #include <string.h>
-#define  UART_RX_BUF 20
+#define  UART_RX_BUF ((uint32_t)0x2000 + (uint32_t)0x10)
 #define  UART_TX_BUF 200
 #define  CONSOLE_HELP_CMD NLINE
 

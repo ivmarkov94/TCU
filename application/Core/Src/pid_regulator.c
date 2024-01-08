@@ -1,4 +1,5 @@
 #include"pid_regulator.h"
+#include "usart_console.h"
 #include "selftest.h"
 #include "adc.h"
 #include "tim.h"
