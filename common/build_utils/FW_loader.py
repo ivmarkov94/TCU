@@ -8,12 +8,14 @@ from com_port_console import com_port_console as com
 
 NLINE = com.NLINE
 
-DEF_DATA = 0  # данные
-DEF_FILE_END = 1  # маркер конца файла
-DEF_SEG_ADDR = 2  # адрес сегмента
-DEF_SEG_START_ADDR = 3  # сегментный адрес старта
-DEF_LINE_ADDR = 4  # линейный адрес
-DEF_LINE_START_ADDR = 5  # линейный адрес старта
+
+class LineType:
+    DATA = 0  # данные
+    FILE_END = 1  # маркер конца файла
+    SEG_ADDR = 2  # адрес сегмента
+    SEG_START_ADDR = 3  # сегментный адрес старта
+    LINE_ADDR = 4  # линейный адрес
+    LINE_START_ADDR = 5  # линейный адрес старта
 
 
 class BLCmd:
@@ -29,110 +31,74 @@ class BLCmd:
     BL_CMD_SIZE = 4
 
 
-class HexLine:
-    def __init__(self, line: str):
-        self.valid = False
-        self.byte_num = str()
-        self.offset = str()
-        self.type_rec = DEF_DATA
-        self.data_list: List[str] = list()
-
-        crc_res = 0
-        for i in range(1, len(line[1:-1]), 2):
-            crc_res += int(line[i : i + 2], 16)
-
-        if crc_res % 256 == 0:
-            self.valid = True
-            self.byte_num = line[1:3]
-            self.offset = line[3:7]
-            self.type_rec = int(line[7:9], 16)
-            for i in range(int(self.byte_num, 16)):
-                self.data_list.append(line[9 + 2 * i : 11 + 2 * i])
-
-
 class HexFile:
-    def __init__(self, fw_path: str):
-        self.fw_data_list: List[HexLine] = list()
-        self.load_start_addr = str()
-        self.fw_entry_addr = str()
+    def __init__(self, fw_path: str, dbg_info=False):
+        self.lines_data: List[List[str]] = []
+        self.lines_size: List[int] = []
+        self.lines_offset: List[int] = []
+        self.fw_start_addr = int()
+        self.fw_entry_addr = int()
+        self.dbg_info = dbg_info
 
         hexf = open(fw_path, "r")
-        lines = hexf.readlines()
+        hex_lines = hexf.readlines()
         hexf.close()
-        for i in range(len(lines)):
-            n_obj = HexLine(lines[i])
-            if n_obj.valid == True:
-                if n_obj.type_rec == DEF_LINE_ADDR:
-                    for i in range(len(n_obj.data_list)):
-                        self.load_start_addr += n_obj.data_list[i]
-                    self.load_start_addr += n_obj.offset
+        self._lines_parsing(hex_lines)
 
-                elif n_obj.type_rec == DEF_LINE_START_ADDR:
-                    for i in range(len(n_obj.data_list)):
-                        self.fw_entry_addr += n_obj.data_list[i]
-
-                elif n_obj.type_rec == DEF_DATA:
-                    self.fw_data_list.append(n_obj)
-
-                elif n_obj.type_rec == DEF_FILE_END:
+    def _lines_parsing(self, lines: List[str]) -> bool:
+        for str_line in lines:
+            crc_res = sum([int(str_line[i : i + 2], 16) for i in range(1, len(str_line[1:]), 2)])
+            if crc_res % 256 == 0:
+                size = int(str_line[1:3], 16)
+                offset = int(str_line[3:7], 16)
+                type = int(str_line[7:9], 16)
+                data = [str_line[9 + 2 * i : 11 + 2 * i] for i in range(size)]
+                if type == LineType.LINE_ADDR:
+                    self.fw_start_addr = int("".join(data) + str("0000"), 16)
+                elif type == LineType.LINE_START_ADDR:
+                    self.fw_entry_addr = "".join(data)
+                elif type == LineType.DATA:
+                    self.lines_data.append(data)
+                    self.lines_size.append(size)
+                    self.lines_offset.append(offset)
+                elif type == LineType.FILE_END:
                     end_found = True
-
                 else:
-                    raise Exception(f"Неиспользуемый тип строки {n_obj.type_rec}")
+                    raise Exception(f"Неиспользуемый тип строки {type}")
             else:
-                raise Exception(f"HEX файл поврежден, line {i+1}")
+                raise Exception(f"HEX файл поврежден, CRC error line:{i+1}")
         if end_found == False:
             raise Exception(f"HEX файл поврежден, конец файла не найден")
 
-    def _fill_line_gaps(self, line_indx: int, add_bytes: int):
-        self.fw_data_list[line_indx].byte_num = hex(
-            int(self.fw_data_list[line_indx].byte_num, 16) + add_bytes
-        ).replace("0x", "")
-        for _ in range(add_bytes):
-            self.fw_data_list[line_indx].data_list.append("FF")
-        print(
-            f"[filled] Addr: {hex(int(self.fw_data_list[line_indx].offset,16))} filled by {add_bytes} of 0xFF"
-        )
+    def _fill_line_gaps(self, line_indx: int, num_bytes: int):
+        self.lines_size[line_indx] += num_bytes
+        self.lines_data[line_indx] += "FF" * num_bytes
+        if self.dbg_info == True:
+            print(f"[gap filled] addr: {hex(self.lines_size[line_indx])} filled by {num_bytes} of 0xFF")
 
     def fill_memory_gaps(self):
         line_indx = 0
-        while line_indx < (len(self.fw_data_list) - 1):
-            addr_that = int(self.fw_data_list[line_indx].offset, 16)
-            addr_next = int(self.fw_data_list[line_indx + 1].offset, 16)
-            byte_num = int(self.fw_data_list[line_indx].byte_num, 16)
+        while line_indx < (len(self.lines_data) - 1):
+            addr_that = self.lines_offset[line_indx]
+            addr_next = self.lines_offset[line_indx + 1]
+            line_size = self.lines_size[line_indx]
 
-            if 16 >= (addr_next - addr_that) > byte_num:
-                add_bytes = (addr_next - addr_that) - byte_num
+            if 16 >= (addr_next - addr_that) > line_size:
+                add_bytes = (addr_next - addr_that) - line_size
                 self._fill_line_gaps(line_indx, add_bytes)
 
             elif (addr_next - addr_that) > 16:  # пропущено больше 16 байт
                 raise Exception("эту часть нужно дописать")
-                add_line_num = math.ceil((addr_next - addr_that) / 16) - 1
-                for i in range(add_line_num):
-                    fw_data_null = HexLine(
-                        ":"
-                        + "10"
-                        + hex(addr_that + 16 * (i + 1))
-                        + "00"
-                        + "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF10"
-                    )
-                    (
-                        self.fw_data_list[: line_indx + 1]
-                        + [fw_data_null]
-                        + self.fw_data_list[line_indx:]
-                    )
-                    print(f"[Added] Addr: {hex(addr_that+16*(i+1))} with 16 of 0xFF")
-                    line_indx += 1
-
             line_indx += 1
 
 
 class FWLoadUtiles:
-    def __init__(self, interface: str):
-        self.fw_frame_data: List[int] = []
+    def __init__(self, interface: str, dbg_info=False):
+        self.fw_frame_data: List[List[int]] = []
         self.fw_frame_addr: List[str] = list()
         self.fw_frame_size: List[str] = list()
         self.console = 0
+        self.dbg_info = dbg_info
 
         self.init_com_interface(interface)
 
@@ -140,48 +106,42 @@ class FWLoadUtiles:
         self.fw_frame_data.append(frame_data)
         self.fw_frame_size.append(str(len(frame_data)))
 
-    def init_fw_frames(self, file: HexFile, frame_size: int, sign_end_addr: int, en_info=False):
-        frame: List[int] = []
-        last_line_indx = len(file.fw_data_list) - 1
-        for line_indx in range(len(file.fw_data_list)):
-            line_bytes = int(file.fw_data_list[line_indx].byte_num, 16)
-            line_offset = int(file.fw_data_list[line_indx].offset, 16)
+    def init_fw_frames(self, file: HexFile, frame_max_size: int, sign_end_addr: int):
+        frame_data: List[int] = []
+        last_line_indx = len(file.lines_data) - 1
+        for line_indx in range(len(file.lines_data)):
+            line_size = file.lines_size[line_indx]
 
-            if len(frame) == 0:
-                self.fw_frame_addr.append(
-                    str(int(file.load_start_addr, 16) + line_offset)
-                )
+            if (len(frame_data) + line_size) > frame_max_size:
+                # to confine max frame size
+                self._append_fw_frame(frame_data)
+                frame_data = []
 
-            if (len(frame) + line_bytes) <= frame_size:
-                for byte_indx in range(line_bytes):
-                    frame.append(
-                        int(file.fw_data_list[line_indx].data_list[byte_indx], 16)
-                    )
-            else:
-                self._append_fw_frame(frame)
-                frame: List[int] = []
+            if len(self.fw_frame_size) == 0 and len(frame_data) >= sign_end_addr:
+                # create first frame with signature at the end of frame
+                self._append_fw_frame(frame_data)
+                frame_data = []
 
-            if len(self.fw_frame_size)==0 and len(frame) >= sign_end_addr:
-                #create first frame with signature at the end of frame
-                self._append_fw_frame(frame)
-                frame: List[int] = []
+            if len(frame_data) == 0:
+                self.fw_frame_addr.append(str(file.fw_start_addr + file.lines_offset[line_indx]))
+            frame_data += [int(file.lines_data[line_indx][byte_indx], 16) for byte_indx in range(line_size)]
 
-            if len(frame) >= frame_size:
-                self._append_fw_frame(frame)
-                frame: List[int] = []
+            if len(frame_data) >= frame_max_size:
+                self._append_fw_frame(frame_data)
+                frame_data = []
             else:
                 if line_indx == (last_line_indx):
-                    self._append_fw_frame(frame)
-                    frame: List[int] = []
-                else:
-                    line_offset_next = int(file.fw_data_list[line_indx + 1].offset, 16)
-                    if (line_offset_next - line_offset) != line_bytes:
-                        print(
-                            f"{hex(line_offset_next)} - {hex(line_offset)} != {hex(line_bytes)}"
-                        )
+                    # creale last fw_frame
+                    self._append_fw_frame(frame_data)
+                    frame_data = []
+                else:  # check gaps between lines addresses
+                    line_offset = file.lines_offset[line_indx]
+                    line_offset_next = file.lines_offset[line_indx + 1]
+                    if (line_offset_next - line_offset) != line_size:
+                        print(f"{hex(line_offset_next)} - {hex(line_offset)} != {hex(line_size)}")
                         raise Exception("Gaps in HEX file. Need fill gaps")
 
-        if en_info == True:
+        if self.dbg_info == True:
             for i in range(len(self.fw_frame_addr)):
                 print(
                     "Frame start address:",
@@ -196,9 +156,7 @@ class FWLoadUtiles:
         if interface_name == "COM_PORT":
             self.console = com.ComPortConsole(port=interface_settings)
             if self.console.setup() == False:
-                raise Exception(
-                    f"Invalid port {interface_settings}. Existing options: BLE and COM_PORT"
-                )
+                raise Exception(f"Invalid port {interface_settings}. Existing options: BLE and COM_PORT")
             else:
                 print(f"{interface_settings} connected")
 
@@ -206,25 +164,26 @@ class FWLoadUtiles:
             self.console = 1  # TODO
 
         else:
-            raise Exception(
-                f"Invalid interface:{interface}. Existing options: BLE and COM_PORT"
-            )
+            raise Exception(f"Invalid interface:{interface}. Existing options: BLE and COM_PORT")
 
     def flash_firmware(self) -> bool:
         if self.bl_switch() == True:
             if self.erase_flash() == True:
-                for i in range(len(self.fw_frame_addr) - 1, -1, -1):
-                    if self.set_flash_addr(self.fw_frame_addr[i]) == False:
+                start_time = time.time()
+                for i in range(len(self.fw_frame_addr)):
+                    indx = len(self.fw_frame_addr) - 1 - i
+                    if self.set_flash_addr(self.fw_frame_addr[indx]) == False:
                         break
-                    if self.set_frame_size(self.fw_frame_size[i]) == False:
+                    if self.set_frame_size(self.fw_frame_size[indx]) == False:
                         break
-                    if self.send_fw_frame(self.fw_frame_data[i]) == False:
+                    if self.send_fw_frame(self.fw_frame_data[indx]) == False:
                         break
                     if self.flash_fw_frame() == False:
                         break
                     print(
-                        f"addr: {hex(int(self.fw_frame_addr[i]))}, size: {int(self.fw_frame_size[i])} done"
+                        f"addr: {hex(int(self.fw_frame_addr[indx]))}, size: {int(self.fw_frame_size[indx])} {i+1}/{len(self.fw_frame_addr)} done"
                     )
+                print(f"Flash time: {(time.time() - start_time):.1f}sec")
 
     def bl_switch(self, timeout_s=0.5):
         result = False
@@ -386,15 +345,15 @@ if __name__ == "__main__":
         interface = "COM_PORT=COM5"
     else:
         interface = args.interface_var
-    
+
     if args.sign_end_addr == None:
         fw_sign_end_addr = 0x120
     else:
         fw_sign_end_addr = args.sign_end_addr
 
-    fw_loader = FWLoadUtiles(interface)
-    hex_file = HexFile(fw_path)
+    fw_loader = FWLoadUtiles(interface, dbg_info=True)
+    hex_file = HexFile(fw_path, dbg_info=True)
     hex_file.fill_memory_gaps()
 
-    fw_loader.init_fw_frames(hex_file, fw_frame_size, fw_sign_end_addr, en_info=True)
+    fw_loader.init_fw_frames(hex_file, fw_frame_size, fw_sign_end_addr)
     fw_loader.flash_firmware()
