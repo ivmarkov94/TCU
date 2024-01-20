@@ -27,15 +27,10 @@ class ComPortConsole:
     def close(self):
         self.serialDut.close()
 
-    def rx_line(self, rx_timeout=0.4, expect_reply=None, end=NLINE):
+    def rx_line(self, rx_timeout=2, end=NLINE):
         if self.initialised is True:
-            if expect_reply != None:
-                rx_data_size = len(expect_reply)
-                rx_data_size += len(end)
-                if rx_timeout < 2:
-                    rx_timeout = 2
             self.serialDut.timeout = rx_timeout
-            return self.serialDut.readline(rx_data_size).decode(errors="ignore").replace(end, "")
+            return self.serialDut.readline().decode(errors="ignore").replace(end, "")
 
     def rx_lines(self, exp_str="", rx_timeout=0.3) -> str:
         if self.initialised is True:

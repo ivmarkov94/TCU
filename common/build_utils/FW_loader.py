@@ -178,14 +178,22 @@ class FWLoadUtiles:
                 start_time = time.time()
                 for i in range(len(self.fw_frame_addr)):
                     indx = len(self.fw_frame_addr) - 1 - i
+                    # start_oper_time = time.time()
                     if self.set_flash_addr(self.fw_frame_addr[indx]) == False:
                         break
+                    # print(f"set_flash_addr: {(time.time() - start_oper_time):.1f}sec")
+                    # start_oper_time = time.time()
                     if self.set_frame_size(self.fw_frame_size[indx]) == False:
                         break
+                    # print(f"set_frame_size: {(time.time() - start_oper_time):.1f}sec")
+                    # start_oper_time = time.time()
                     if self.send_fw_frame(self.fw_frame_data[indx]) == False:
                         break
+                    # print(f"send_fw_frame: {(time.time() - start_oper_time):.1f}sec")
+                    # start_oper_time = time.time()
                     if self.flash_fw_frame() == False:
                         break
+                    # print(f"flash_fw_frame: {(time.time() - start_oper_time):.1f}sec")
                     print(
                         f"addr: {hex(int(self.fw_frame_addr[indx]))}, size: {int(self.fw_frame_size[indx])} {i+1}/{len(self.fw_frame_addr)} done"
                     )
@@ -195,13 +203,13 @@ class FWLoadUtiles:
         result = False
 
         self.send_cmd(BLCmd.BL_CMD_FW_ST, crc=False)
-        if self.console.rx_line(SKIP, "BL") == "BL":
+        if self.console.rx_line() == "BL":
             result = True
         else:
             self.send_cmd(BLCmd.BL_CMD_GO_TO_BL, crc=False)
             time.sleep(timeout_s)
             self.send_cmd(BLCmd.BL_CMD_FW_ST, crc=False)
-            if self.console.rx_line(SKIP, "BL") == "BL":
+            if self.console.rx_line() == "BL":
                 result = True
 
         if result == True:
@@ -212,7 +220,7 @@ class FWLoadUtiles:
 
     def erase_flash(self):
         self.send_cmd(BLCmd.BL_CMD_ERASE_FLASH)
-        s = self.console.rx_line(SKIP, BLCmd.BL_CMD_FORMAT)
+        s = self.console.rx_line()
         if s == BLCmd.BL_CMD_DONE_ST:
             print("[Flash erase] Process success")
             return True
@@ -222,7 +230,7 @@ class FWLoadUtiles:
 
     def set_flash_addr(self, addr: str):
         self.send_cmd(BLCmd.BL_CMD_SET_FLASH_ADDR + "=" + addr)
-        s = self.console.rx_line(SKIP, str(addr))
+        s = self.console.rx_line()
         if s == addr:
             return True
         elif s == BLCmd.BL_CMD_ERROR_ST:
@@ -234,7 +242,7 @@ class FWLoadUtiles:
 
     def set_frame_size(self, size: str):
         self.send_cmd(BLCmd.BL_CMD_SET_FLASH_FRAME_SIZE + "=" + size)
-        s = self.console.rx_line(SKIP, str(size))
+        s = self.console.rx_line()
         if s == size:
             return True
         elif s == BLCmd.BL_CMD_ERROR_ST:
@@ -246,10 +254,10 @@ class FWLoadUtiles:
 
     def send_fw_frame(self, data_list: List[int]):
         self.send_cmd(BLCmd.BL_CMD_GET_AND_FLASH_FW_FRAME)
-        s = self.console.rx_line(SKIP, BLCmd.BL_CMD_FORMAT)
+        s = self.console.rx_line()
         if s == BLCmd.BL_CMD_READY_ST:
             self.send_data(data_list)
-            s = self.console.rx_line(5, BLCmd.BL_CMD_FORMAT)
+            s = self.console.rx_line(10)
             if s == BLCmd.BL_CMD_DONE_ST:
                 return True
             elif s == BLCmd.BL_CMD_CRC_ERR_ST:
@@ -258,12 +266,14 @@ class FWLoadUtiles:
             elif s == BLCmd.BL_CMD_ERROR_ST:
                 print("[Send fw frame] Send error. Timeout between byte frames > 270ms or data was lost")
                 return False
+            else:
+                print("[Send fw frame] Send error. Timeout rx_line()")
         else:
             print("[Send fw frame] Ready status was not get")
             return False
 
     def flash_fw_frame(self):
-        s = self.console.rx_line(SKIP, BLCmd.BL_CMD_FORMAT)
+        s = self.console.rx_line()
         if s == BLCmd.BL_CMD_DONE_ST:
             return True
         else:
@@ -352,7 +362,7 @@ if __name__ == "__main__":
         fw_path = args.fw_path
 
     if args.frame_size == None:
-        fw_frame_size = 800
+        fw_frame_size = 1024
     else:
         fw_frame_size = int(args.frame_size)
     if args.interface_var == None:
