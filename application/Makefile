@@ -26,7 +26,7 @@ DEBUG = 1
 # optimization
 OPT = -Og
 # checking stack and heap sizes
-CHECK_STACK_HEAP = Y
+CHECK_STACK_HEAP = N
 
 
 #######################################
@@ -171,7 +171,7 @@ LDSCRIPT = $(BUILD_DIR)/preproccesor_script.ld
 # libraries
 LIBS = -lc -lm -lnosys 
 LIBDIR = 
-LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections -u _printf_float
+LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections 
 
 # default action: build all
 all: $(LDSCRIPT) $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).bin $(BUILD_DIR)/$(TARGET).hex  end.print

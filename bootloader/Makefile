@@ -26,7 +26,7 @@ DEBUG = 1
 # optimization
 OPT = -Og
 # checking stack and heap sizes
-CHECK_STACK_HEAP = Y
+CHECK_STACK_HEAP = N
 
 # to detect bootloader fw
 BL_FW = Y
