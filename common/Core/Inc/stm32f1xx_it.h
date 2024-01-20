@@ -44,7 +44,9 @@
 /* USER CODE BEGIN EM */
 #define REQ_FROM_APP 0xA3C1
 #define FW_SIGNATURE 0x14C8531B
+#define RESET_SIGNATURE 0xC138
 extern uint32_t app_call_st;
+extern uint32_t app_call_cnt;
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/

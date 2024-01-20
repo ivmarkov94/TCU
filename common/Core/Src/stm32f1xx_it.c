@@ -45,6 +45,7 @@
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
 uint32_t app_call_st __attribute__((section(".noinit")));
+uint32_t app_call_cnt __attribute__((section(".noinit")));
 static uint32_t heap_overflow  = 0;
 static uint32_t stack_overflow = 0;
 /* USER CODE END PV */
@@ -223,9 +224,20 @@ void SysTick_Handler(void)
 {
   /* USER CODE BEGIN SysTick_IRQn 0 */
   extern volatile uint32_t timer_ms;
+  static bool app_call_init = false;
 
   timer_ms += 1U;
-
+  
+  if(!app_call_init)
+  {
+    if(get_time_ms() > 5000)
+    {
+      uint16_t* u16ptr = (uint16_t*)&app_call_cnt;
+      app_call_init = true;
+      u16ptr[0] = RESET_SIGNATURE;
+      u16ptr[1] = 0;
+    }
+  }
 #ifdef CHECK_STACK_HEAP
   static uint32_t check_timer_ms;
   if((check_timer_ms+50/* ms */)<timer_ms)

@@ -108,11 +108,27 @@ int main(void)
     app_call_st = 0;
   }else{
     volatile uint32_t fw_signature_addr = (uint32_t)&__isr_vector_end - FLASH_BASE;
+    uint16_t* u16ptr = (uint16_t*)&app_call_cnt;
     fw_signature_addr += fw_signature_addr%8;
     fw_signature_addr += APL_START_ADDRES;
-    if(*((uint64_t*)fw_signature_addr) == FW_SIGNATURE)
+    if((*((uint64_t*)fw_signature_addr) == FW_SIGNATURE) )
     {
-      go_to_app();
+      if(u16ptr[0] == RESET_SIGNATURE)
+      {
+        if(u16ptr[1] < 5)
+        {
+          u16ptr[1]++;
+          go_to_app();
+        }else{
+          printf("App call cnt > 5"NLINE);
+        }  
+      }else{
+        u16ptr[0] = RESET_SIGNATURE;
+        u16ptr[1] = 1;
+        go_to_app();
+      }
+    }else{
+      printf("Application signature fail"NLINE);
     }
   }
   printf("bootloader started"NLINE);
