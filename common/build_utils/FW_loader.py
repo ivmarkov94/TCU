@@ -7,6 +7,7 @@ from argparse import ArgumentParser
 from com_port_console import com_port_console as com
 
 NLINE = com.NLINE
+SKIP = 0
 
 
 class LineType:
@@ -28,7 +29,8 @@ class BLCmd:
     BL_CMD_READY_ST = "_rds"
     BL_CMD_DONE_ST = "_dns"
     BL_CMD_ERROR_ST = "_ers"
-    BL_CMD_SIZE = 4
+    BL_CMD_CRC_ERR_ST = "_crc"
+    BL_CMD_FORMAT = "_lll"
 
 
 class HexFile:
@@ -124,6 +126,10 @@ class FWLoadUtiles:
 
             if len(frame_data) == 0:
                 self.fw_frame_addr.append(str(file.fw_start_addr + file.lines_offset[line_indx]))
+                if len(self.fw_frame_addr) == 1 and int(hex(int(self.fw_frame_addr[0]))[-4:]) <= 0:
+                    raise Exception(
+                        f"Uncorrect start address: {hex(int(self.fw_frame_addr[0]))}.\nLook like application without bootloader"
+                    )
             frame_data += [int(file.lines_data[line_indx][byte_indx], 16) for byte_indx in range(line_size)]
 
             if len(frame_data) >= frame_max_size:
@@ -189,13 +195,13 @@ class FWLoadUtiles:
         result = False
 
         self.send_cmd(BLCmd.BL_CMD_FW_ST, crc=False)
-        if self.console.rx_line() == "BL":
+        if self.console.rx_line(SKIP, "BL") == "BL":
             result = True
         else:
             self.send_cmd(BLCmd.BL_CMD_GO_TO_BL, crc=False)
             time.sleep(timeout_s)
             self.send_cmd(BLCmd.BL_CMD_FW_ST, crc=False)
-            if self.console.rx_line() == "BL":
+            if self.console.rx_line(SKIP, "BL") == "BL":
                 result = True
 
         if result == True:
@@ -206,49 +212,58 @@ class FWLoadUtiles:
 
     def erase_flash(self):
         self.send_cmd(BLCmd.BL_CMD_ERASE_FLASH)
-        s = self.console.rx_line(cmd_len=BLCmd.BL_CMD_SIZE, rx_timeout=2)
+        s = self.console.rx_line(SKIP, BLCmd.BL_CMD_FORMAT)
         if s == BLCmd.BL_CMD_DONE_ST:
-            print("Flash erased")
+            print("[Flash erase] Process success")
             return True
         else:
-            print("Flash erase error")
+            print("{Flash erase] Process error, Answer was not got.")
             return False
 
     def set_flash_addr(self, addr: str):
         self.send_cmd(BLCmd.BL_CMD_SET_FLASH_ADDR + "=" + addr)
-        s = self.console.rx_line()
+        s = self.console.rx_line(SKIP, str(addr))
         if s == addr:
             return True
+        elif s == BLCmd.BL_CMD_ERROR_ST:
+            print(f"[Set flash address] Address out of range. Val={hex(int(addr))}")
+            return False
         else:
-            print("Set flash address error")
+            print(f"[Set flash address] Process error, Answer was not got.")
             return False
 
     def set_frame_size(self, size: str):
         self.send_cmd(BLCmd.BL_CMD_SET_FLASH_FRAME_SIZE + "=" + size)
-        s = self.console.rx_line()
+        s = self.console.rx_line(SKIP, str(size))
         if s == size:
             return True
+        elif s == BLCmd.BL_CMD_ERROR_ST:
+            print(f"[Set flash size] size out of range. Val={size}")
+            return False
         else:
-            print("Set flash size error")
+            print(f"[Set flash size] Process error, Answer was not got.")
             return False
 
     def send_fw_frame(self, data_list: List[int]):
         self.send_cmd(BLCmd.BL_CMD_GET_AND_FLASH_FW_FRAME)
-        s = self.console.rx_line(cmd_len=BLCmd.BL_CMD_SIZE)
+        s = self.console.rx_line(SKIP, BLCmd.BL_CMD_FORMAT)
         if s == BLCmd.BL_CMD_READY_ST:
             self.send_data(data_list)
-            s = self.console.rx_line(2, BLCmd.BL_CMD_SIZE)
+            s = self.console.rx_line(5, BLCmd.BL_CMD_FORMAT)
             if s == BLCmd.BL_CMD_DONE_ST:
                 return True
-            else:
-                print("Send fw frame error")
+            elif s == BLCmd.BL_CMD_CRC_ERR_ST:
+                print("[Send fw frame] CRC error during sending")
+                return False
+            elif s == BLCmd.BL_CMD_ERROR_ST:
+                print("[Send fw frame] Send error. Timeout between byte frames > 270ms or data was lost")
                 return False
         else:
-            print("Send fw frame error")
+            print("[Send fw frame] Ready status was not get")
             return False
 
     def flash_fw_frame(self):
-        s = self.console.rx_line(2, BLCmd.BL_CMD_SIZE)
+        s = self.console.rx_line(SKIP, BLCmd.BL_CMD_FORMAT)
         if s == BLCmd.BL_CMD_DONE_ST:
             return True
         else:
@@ -319,7 +334,7 @@ if __name__ == "__main__":
         "-sgea",
         "--sign_end_addr",
         action="store",
-        help="Flash signature end address in HEX file",
+        help="Flash signature end address in HEX file. Example 0x120",
         required=False,
     )
 
@@ -337,19 +352,18 @@ if __name__ == "__main__":
         fw_path = args.fw_path
 
     if args.frame_size == None:
-        fw_frame_size = 1024 * 8
+        fw_frame_size = 800
     else:
-        fw_frame_size = args.frame_size
-
+        fw_frame_size = int(args.frame_size)
     if args.interface_var == None:
-        interface = "COM_PORT=COM5"
+        interface = "COM_PORT=COM6"
     else:
         interface = args.interface_var
 
     if args.sign_end_addr == None:
         fw_sign_end_addr = 0x120
     else:
-        fw_sign_end_addr = args.sign_end_addr
+        fw_sign_end_addr = int(args.sign_end_addr, 16)
 
     fw_loader = FWLoadUtiles(interface, dbg_info=True)
     hex_file = HexFile(fw_path, dbg_info=True)

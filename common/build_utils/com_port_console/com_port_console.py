@@ -1,7 +1,9 @@
 import serial
 import time
 from typing import Dict, List
+
 NLINE = "\r\n"
+
 
 class ComPortConsole:
     def __init__(self, port="", baud=115200) -> None:
@@ -14,9 +16,7 @@ class ComPortConsole:
 
     def setup(self):
         try:
-            self.serialDut = serial.Serial(
-                port=self.port, baudrate=self.baudrate, timeout=self.timeout
-            )
+            self.serialDut = serial.Serial(port=self.port, baudrate=self.baudrate, timeout=self.timeout)
         except serial.serialutil.SerialException:
             print(f"Could not open the port {self.port}")
             return False
@@ -27,17 +27,20 @@ class ComPortConsole:
     def close(self):
         self.serialDut.close()
 
-    def rx_line(self, rx_timeout=0.4, cmd_len=-1, end=NLINE):
+    def rx_line(self, rx_timeout=0.4, expect_reply=None, end=NLINE):
         if self.initialised is True:
-            if cmd_len != -1:
-                cmd_len += len(end)
+            if expect_reply != None:
+                rx_data_size = len(expect_reply)
+                rx_data_size += len(end)
+                if rx_timeout < 2:
+                    rx_timeout = 2
             self.serialDut.timeout = rx_timeout
-            return self.serialDut.readline(cmd_len).decode(errors="ignore").replace(end,"")
+            return self.serialDut.readline(rx_data_size).decode(errors="ignore").replace(end, "")
 
     def rx_lines(self, exp_str="", rx_timeout=0.3) -> str:
         if self.initialised is True:
             if exp_str != "":
-                str_len = len(exp_str+NLINE)
+                str_len = len(exp_str + NLINE)
                 rx_timeout = 0.5
             else:
                 str_len = 1000
@@ -50,7 +53,7 @@ class ComPortConsole:
             self.serialDut.reset_input_buffer()
             self.serialDut.write(str.encode(cmd))
 
-    def tx_data(self, date_list:List[int]):
+    def tx_data(self, date_list: List[int]):
         if self.initialised is True:
             self.serialDut.reset_input_buffer()
             self.serialDut.write(bytes(date_list))

@@ -48,30 +48,37 @@ void erase_flash(void)
 
 void get_fw_frame(void)
 {
-    uint32_t time_ms, result = false;
+    uint32_t time_ms;
+    int8_t res_st = 0;
     
     ring_clear(&uart3.rx_fifo);
     printf(BL_CMD_READY_ST NLINE);
-
     time_ms = get_time_ms();
-    while(time_elapsed_ms(time_ms, 2000/* ms */) == false)
+
+    while(!uart_is_cmd_ready() || !time_elapsed_ms(time_ms, WAIT_TRANSMIT_START_MS))
     {
         if(ring_get_count(&uart3.rx_fifo) >= (frame_size+CRC_SIZE))
         {
             if(hex_crc_check(uart3.rx_fifo.buffer, (frame_size+CRC_SIZE)))
             {
-                result = true; 
+                res_st = 1; 
+            }else{
+                res_st = -1;
             }
             break;
         }
         wdgs_refresh();
     }
-    if(result){
+
+    if(res_st > 0){
         printf(BL_CMD_DONE_ST NLINE);
         flash_fw_frame();
+    }else if(res_st < 0){
+        printf(BL_CMD_CRC_ERR_ST NLINE);
     }else{
         printf(BL_CMD_ERROR_ST NLINE);
     }
+    ring_clear(&uart3.rx_fifo);
 }
 
 static void flash_fw_frame(void)
