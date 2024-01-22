@@ -82,7 +82,8 @@ void console_handler(void)
     {
       if(console_cmd()==false)
       {
-        printf("Unknowned cmd: %sCmd list:"
+        printf("Unknowned cmd"NLINE
+        "Cmd list:"
         NLINE"wdt"
 #ifdef CHECK_STACK_HEAP
         NLINE"stack"
@@ -96,7 +97,7 @@ void console_handler(void)
 #else
         NLINE"go_to_bl"
 #endif        
-        CONSOLE_HELP_CMD,(char*)uart3.rx_fifo.buffer);
+        CONSOLE_HELP_CMD);
       }
     }
     ring_clear(&uart3.rx_fifo);
