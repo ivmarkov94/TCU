@@ -5,9 +5,9 @@
 #include "usart.h"
 #include "ring_buffer.h"
 
-#define  NLINE "\r\n"
-#define  NLINE_SIZE 2
-#define TIME_BETWEEN_CMD_MS 200
+#define NLINE "\r\n"
+#define NLINE_SIZE 2
+#define TIME_BETWEEN_CMD_MS 500
 #define IS_CMD_MATCH(string)\
     is_cmd_match(string, sizeof(string))
 
