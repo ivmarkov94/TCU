@@ -27,6 +27,22 @@
       }\
     }}
 
+#define WAIT_UART_DATA(time_ms)\
+    {static uint32_t ms_tim = 0;\
+    ms_tim = get_time_ms();\
+    while(1)\
+    {\
+      wdgs_refresh(); \
+      if(time_elapsed_ms(ms_tim, time_ms))\
+      {\
+        break;\
+      }\
+      if(uart_is_cmd_ready())\
+      {\
+        break;\
+      }\
+    }}
+
 #define LED_TONGLE_MS(time_ms) \
     {static uint32_t ms_tim =0;\
     if(time_elapsed_ms(ms_tim, time_ms))\
