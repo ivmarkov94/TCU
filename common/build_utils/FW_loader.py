@@ -109,18 +109,20 @@ class FWLoadUtiles:
         self.fw_frame_size.append(str(len(frame_data)))
 
     def init_fw_frames(self, file: HexFile, frame_max_size: int, sign_end_addr: int):
+        signature_frame_init = False
         frame_data: List[int] = []
         last_line_indx = len(file.lines_data) - 1
         for line_indx in range(len(file.lines_data)):
             line_size = file.lines_size[line_indx]
 
-            if (len(frame_data) + line_size) > frame_max_size:
+            if ((len(frame_data) + line_size) > frame_max_size) and (signature_frame_init == True):
                 # to confine max frame size
                 self._append_fw_frame(frame_data)
                 frame_data = []
 
-            if len(self.fw_frame_size) == 0 and len(frame_data) >= sign_end_addr:
+            if (signature_frame_init == False) and (len(frame_data) >= sign_end_addr):
                 # create first frame with signature at the end of frame
+                signature_frame_init = True
                 self._append_fw_frame(frame_data)
                 frame_data = []
 
@@ -130,9 +132,10 @@ class FWLoadUtiles:
                     raise Exception(
                         f"Uncorrect start address: {hex(int(self.fw_frame_addr[0]))}.\nLook like application without bootloader"
                     )
+
             frame_data += [int(file.lines_data[line_indx][byte_indx], 16) for byte_indx in range(line_size)]
 
-            if len(frame_data) >= frame_max_size:
+            if (len(frame_data) >= frame_max_size) and (signature_frame_init == True):
                 self._append_fw_frame(frame_data)
                 frame_data = []
             else:
@@ -172,27 +175,43 @@ class FWLoadUtiles:
         else:
             raise Exception(f"Invalid interface:{interface}. Existing options: BLE and COM_PORT")
 
+    def retry_if_false(self, func, arg0, sleep_time=0, retry_num=5):
+        cnt = 0
+        if arg0 == None:
+            while (cnt < retry_num) and (func() == False):
+                cnt += 1
+                print(f"[NOTICE] retry:{cnt}")
+                time.sleep(sleep_time)
+        else:
+            while (cnt < retry_num) and (func(arg0) == False):
+                cnt += 1
+                print(f"[NOTICE] retry:{cnt}")
+                time.sleep(sleep_time)
+        if cnt >= retry_num:
+            return False
+        else:
+            return True
+
     def flash_firmware(self) -> bool:
-        if self.bl_switch() == True:
-            if self.erase_flash() == True:
+        if self.retry_if_false(self.bl_switch, None) == True:
+            if self.retry_if_false(self.erase_flash, None) == True:
                 start_time = time.time()
                 for i in range(len(self.fw_frame_addr)):
                     indx = len(self.fw_frame_addr) - 1 - i
                     # start_oper_time = time.time()
-                    if self.set_flash_addr(self.fw_frame_addr[indx]) == False:
+                    if self.retry_if_false(self.set_flash_addr, self.fw_frame_addr[indx]) == False:
                         break
                     # print(f"set_flash_addr: {(time.time() - start_oper_time):.1f}sec")
                     # start_oper_time = time.time()
-                    if self.set_frame_size(self.fw_frame_size[indx]) == False:
+                    if self.retry_if_false(self.set_frame_size, self.fw_frame_size[indx]) == False:
                         break
                     # print(f"set_frame_size: {(time.time() - start_oper_time):.1f}sec")
                     # start_oper_time = time.time()
-                    if self.send_fw_frame(self.fw_frame_data[indx]) == False:
+                    if self.retry_if_false(self.send_fw_frame, self.fw_frame_data[indx]) == False:
                         break
                     # print(f"send_fw_frame: {(time.time() - start_oper_time):.1f}sec")
                     # start_oper_time = time.time()
-                    if self.flash_fw_frame() == False:
-                        break
+                    self.flash_fw_frame()
                     # print(f"flash_fw_frame: {(time.time() - start_oper_time):.1f}sec")
                     print(
                         f"addr: {hex(int(self.fw_frame_addr[indx]))}, size: {int(self.fw_frame_size[indx])} {i+1}/{len(self.fw_frame_addr)} done"
@@ -277,7 +296,7 @@ class FWLoadUtiles:
         if s == BLCmd.BL_CMD_DONE_ST:
             return True
         else:
-            print("flash fw frame error")
+            print("[WARNING] flash_fw_frame done status not received")
             return False
 
     def send_cmd(self, cmd: str, crc=True, end=NLINE):
