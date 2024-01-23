@@ -99,6 +99,7 @@ class FWLoadUtiles:
         self.fw_frame_data: List[List[int]] = []
         self.fw_frame_addr: List[str] = list()
         self.fw_frame_size: List[str] = list()
+        self.speed: List[int] = list()
         self.console = 0
         self.dbg_info = dbg_info
 
@@ -160,22 +161,13 @@ class FWLoadUtiles:
                 )
 
     def init_com_interface(self, interface: str):
-        interface_name = interface[: interface.find("=")]
-        interface_settings = interface[interface.find("=") + 1 :]
-        if interface_name == "COM_PORT":
-            self.console = com.ComPortConsole(port=interface_settings)
-            if self.console.setup() == False:
-                raise Exception(f"Invalid port {interface_settings}. Existing options: BLE and COM_PORT")
-            else:
-                print(f"{interface_settings} connected")
-
-        elif interface_name == "BLE":
-            self.console = 1  # TODO
-
+        self.console = com.ComPortConsole(port=interface)
+        if self.console.setup() == False:
+            raise Exception(f"Invalid port {interface}. Existing options: BLE and COM_PORT")
         else:
-            raise Exception(f"Invalid interface:{interface}. Existing options: BLE and COM_PORT")
+            print(f"{interface} connected")
 
-    def retry_if_false(self, func, arg0, sleep_time=0, retry_num=5):
+    def retry_if_false(self, func, arg0, sleep_time=0.5, retry_num=5):
         cnt = 0
         if arg0 == None:
             while (cnt < retry_num) and (func() == False):
@@ -198,25 +190,20 @@ class FWLoadUtiles:
                 start_time = time.time()
                 for i in range(len(self.fw_frame_addr)):
                     indx = len(self.fw_frame_addr) - 1 - i
-                    # start_oper_time = time.time()
                     if self.retry_if_false(self.set_flash_addr, self.fw_frame_addr[indx]) == False:
                         break
-                    # print(f"set_flash_addr: {(time.time() - start_oper_time):.1f}sec")
-                    # start_oper_time = time.time()
                     if self.retry_if_false(self.set_frame_size, self.fw_frame_size[indx]) == False:
                         break
-                    # print(f"set_frame_size: {(time.time() - start_oper_time):.1f}sec")
-                    # start_oper_time = time.time()
                     if self.retry_if_false(self.send_fw_frame, self.fw_frame_data[indx]) == False:
                         break
-                    # print(f"send_fw_frame: {(time.time() - start_oper_time):.1f}sec")
-                    # start_oper_time = time.time()
                     self.flash_fw_frame()
-                    # print(f"flash_fw_frame: {(time.time() - start_oper_time):.1f}sec")
                     print(
                         f"addr: {hex(int(self.fw_frame_addr[indx]))}, size: {int(self.fw_frame_size[indx])} {i+1}/{len(self.fw_frame_addr)} done"
                     )
                 print(f"Flash time: {(time.time() - start_time):.1f}sec")
+                print(
+                    f"frame payload:\nAVG {int(sum(self.speed)/len(self.speed))} bit/sec\nMAX {int(max(self.speed))} bit/sec\nMIN {int(min(self.speed))} bit/sec"
+                )
 
     def bl_switch(self, timeout_s=0.5):
         result = False
@@ -273,11 +260,12 @@ class FWLoadUtiles:
 
     def send_fw_frame(self, data_list: List[int]):
         self.send_cmd(BLCmd.BL_CMD_GET_AND_FLASH_FW_FRAME)
-        s = self.console.rx_line()
-        if s == BLCmd.BL_CMD_READY_ST:
-            self.send_data(data_list)
-            s = self.console.rx_line(10)
-            if s == BLCmd.BL_CMD_DONE_ST:
+
+        if self.console.rx_line() == BLCmd.BL_CMD_READY_ST:
+            start_time = self.send_data(data_list)
+            if self.console.rx_line(10) == BLCmd.BL_CMD_DONE_ST:
+                delta_time = time.time() - start_time
+                self.speed.append((len(data_list) * 8) / delta_time)
                 return True
             elif s == BLCmd.BL_CMD_CRC_ERR_ST:
                 print("[Send fw frame] CRC error during sending")
@@ -312,7 +300,9 @@ class FWLoadUtiles:
     def send_data(self, data_list: List[int], crc=True):
         if crc:
             data_list.append(self.get_data_crc(data_list))
+        start_time = time.time()
         self.console.tx_data(data_list)
+        return start_time
 
     def get_cmd_crc(self, cmd: str) -> int:
         crc = 0
@@ -356,7 +346,7 @@ if __name__ == "__main__":
         "-iv",
         "--interface_var",
         action="store",
-        help="There are BLE and COM_PORT=COM5",
+        help="Number of COM PORT. Example COM5",
         required=False,
     )
     parser.add_argument(
@@ -385,7 +375,7 @@ if __name__ == "__main__":
     else:
         fw_frame_size = int(args.frame_size)
     if args.interface_var == None:
-        interface = "COM_PORT=COM6"
+        interface = "COM5"
     else:
         interface = args.interface_var
 
