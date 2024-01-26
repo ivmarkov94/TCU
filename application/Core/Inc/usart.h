@@ -32,8 +32,8 @@ extern "C" {
 #include "stdio.h"
 #include <string.h>
 #define  UART_RX_BUF 20
-#define  UART_TX_BUF 200
-#define  CONSOLE_HELP_CMD NLINE"adc1?"NLINE"adc2?"NLINE"adcr1?"NLINE"adcr2?"NLINE"amp?"NLINE"dbg_base"NLINE"wdt"NLINE"c_off"NLINE"c_cust"NLINE"c_bmw"NLINE"inpwm?"NLINE"tm1"NLINE"tm2"NLINE"p="NLINE"d="NLINE"i="NLINE
+#define  UART_TX_BUF 300
+#define  CONSOLE_HELP_CMD NLINE"adc1?"NLINE"adc2?"NLINE"adcr1?"NLINE"adcr2?"NLINE"amp?"NLINE"dbg_base"NLINE"wdt"NLINE"c_off"NLINE"c_cust"NLINE"c_bmw"NLINE"inpwm?"NLINE"tm1"NLINE"tm2"NLINE"p="NLINE"d="NLINE"i="NLINE"log="NLINE
 
 /* USER CODE END Includes */
 /* USER CODE BEGIN Private defines */

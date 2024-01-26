@@ -50,6 +50,7 @@ Core/Src/selftest.c \
 Core/Src/dma.c \
 Core/Src/iwdg.c \
 Core/Src/wwdg.c \
+Core/Src/log.c \
 Core/Src/interrupt_handlers.c \
 $(ROOT)/common/Core/Src/stm32f1xx_it.c \
 $(ROOT)/common/Core/Src/usart_console.c \

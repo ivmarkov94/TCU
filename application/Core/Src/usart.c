@@ -24,6 +24,7 @@
 #include "device.h"
 #include "tim.h"
 #include "adc.h"
+#include "log.h"
 #include "stm32f1xx_it.h"
 #include "pid_regulator.h"
 #include "usart_console.h"
@@ -145,6 +146,12 @@ uint8_t console_cmd(void)
   }else if(IS_CMD_MATCH("st?"))/* selftest print */
   {
     selftest_print_errors();
+  }else if(IS_CMD_MATCH("log="))
+  {
+    int32_t line_num = get_int_arg(&uart3.rx_fifo.buffer[4], false);
+    if(line_num > 0){
+      print_log_info((uint32_t)line_num);
+    }
   }else if(IS_CMD_MATCH("st_wh"))/* selftest whole test */
   {
     selftest_set_print_all(true);

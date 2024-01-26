@@ -33,6 +33,7 @@
 #include "pid_regulator.h"
 #include "usart_console.h"
 #include "selftest.h"
+#include "log.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -118,7 +119,7 @@ int main(void)
   WAIT(1000); /* wait to finish all transient process */
   LL_GPIO_SetOutputPin(led_GPIO_Port,led_Pin);/* Disable green led */
   
-  selftest_whole_test();
+  selftest_whole_test();  
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -129,6 +130,7 @@ int main(void)
     TASK(console_handler,100);
     TASK(control_system,10);
     TASK(selftest_short_test,10000);
+    TASK(log_handler, LOG_TIMEOUT);
     TASK(wdgs_refresh, 5);
     LED_TONGLE_MS(1000)
     /* USER CODE END WHILE */
