@@ -8,6 +8,7 @@ from com_port_console import com_port_console as com
 
 NLINE = com.NLINE
 SKIP = 0
+SEND_TIME_ERR_MS = 0.012
 
 
 class LineType:
@@ -100,10 +101,32 @@ class FWLoadUtiles:
         self.fw_frame_addr: List[str] = list()
         self.fw_frame_size: List[str] = list()
         self.speed: List[int] = list()
-        self.console = 0
+        self.frm_time: List[int] = list()
+        self.wireless = False
         self.dbg_info = dbg_info
+        self.init_com_interface(interface.split()[0])
+        if len(interface.split()) >= 2 and interface.split()[1] == "BLE":
+            self.wireless = True
+            if self.retry_if_false(self.connect_to_BLE, None) == False:
+                raise Exception("[Error] BLE module connection fail. Try reconnecting that to USB port")
 
-        self.init_com_interface(interface)
+    def connect_to_BLE(self):
+        self.send_cmd("AT", False)
+        s = self.console.rx_lines(rx_timeout=1)
+        if s == ("OK" + NLINE):
+            print("connecting to BLE...\\\\\\\\\\s")
+            self.send_cmd("AT+INQ", False)
+            print(self.console.rx_lines(rx_timeout=4))
+            self.send_cmd("AT+SHOW", False)
+            print(self.console.rx_lines(rx_timeout=0.5))
+            self.send_cmd("AT+CONN1", False)
+            s = self.console.rx_lines(rx_timeout=0.5)
+            print(s)
+            if s.lower().find("+connected") < 0:
+                print("[Error] BLE module connection fail")
+                return False
+            else:
+                return True
 
     def _append_fw_frame(self, frame_data: List[int]):
         self.fw_frame_data.append(frame_data)
@@ -198,14 +221,14 @@ class FWLoadUtiles:
                         break
                     self.flash_fw_frame()
                     print(
-                        f"addr: {hex(int(self.fw_frame_addr[indx]))}, size: {int(self.fw_frame_size[indx])} {i+1}/{len(self.fw_frame_addr)} done"
+                        f"addr: {hex(int(self.fw_frame_addr[indx]))}, size: {int(self.fw_frame_size[indx])} {i+1}/{len(self.fw_frame_addr)} done. Transmit time:{self.frm_time[-1]:.1f}"
                     )
                 print(f"Flash time: {(time.time() - start_time):.1f}sec")
-                print(
-                    f"frame payload:\nAVG {int(sum(self.speed)/len(self.speed))} bit/sec\nMAX {int(max(self.speed))} bit/sec\nMIN {int(min(self.speed))} bit/sec"
-                )
+                # print(
+                #     f"frame payload:\nAVG {int(sum(self.speed)/len(self.speed))} bit/sec\nMAX {int(max(self.speed))} bit/sec\nMIN {int(min(self.speed))} bit/sec"
+                # )
 
-    def bl_switch(self, timeout_s=0.5):
+    def bl_switch(self, timeout_s=0.6):
         result = False
 
         self.send_cmd(BLCmd.BL_CMD_FW_ST, crc=False)
@@ -263,9 +286,11 @@ class FWLoadUtiles:
 
         if self.console.rx_line() == BLCmd.BL_CMD_READY_ST:
             start_time = self.send_data(data_list)
-            if self.console.rx_line(10) == BLCmd.BL_CMD_DONE_ST:
+            s = self.console.rx_line(10)
+            if s == BLCmd.BL_CMD_DONE_ST:
                 delta_time = time.time() - start_time
                 self.speed.append((len(data_list) * 8) / delta_time)
+                self.frm_time.append(delta_time)
                 return True
             elif s == BLCmd.BL_CMD_CRC_ERR_ST:
                 print("[Send fw frame] CRC error during sending")
@@ -301,7 +326,21 @@ class FWLoadUtiles:
         if crc:
             data_list.append(self.get_data_crc(data_list))
         start_time = time.time()
-        self.console.tx_data(data_list)
+        if self.wireless == True:
+            start_indx, end_indx, data_len = 0, 256, len(data_list)
+            while start_indx < data_len:
+                if start_indx > 0:
+                    time.sleep(1.1)  # wait while BLE send the data TO DO 1.1 for 100240 work
+                else:
+                    start_time = time.time() + SEND_TIME_ERR_MS
+                self.console.tx_data(data_list[start_indx:end_indx])
+                start_indx = end_indx
+                end_indx += 256
+                if end_indx > data_len:
+                    end_indx = data_len
+        else:
+            start_time = time.time() + SEND_TIME_ERR_MS
+            self.console.tx_data(data_list)
         return start_time
 
     def get_cmd_crc(self, cmd: str) -> int:
@@ -346,7 +385,7 @@ if __name__ == "__main__":
         "-iv",
         "--interface_var",
         action="store",
-        help="Number of COM PORT. Example COM5",
+        help="Number of COM PORT. Example 'COM5' or 'COM5 BLE'",
         required=False,
     )
     parser.add_argument(
@@ -371,7 +410,7 @@ if __name__ == "__main__":
         fw_path = args.fw_path
 
     if args.frame_size == None:
-        fw_frame_size = 1024
+        fw_frame_size = 256 * 4
     else:
         fw_frame_size = int(args.frame_size)
     if args.interface_var == None:
