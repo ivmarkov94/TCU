@@ -210,8 +210,17 @@ $(BUILD_DIR):
 # clean up
 #######################################
 clean:
+ifeq ($(shell uname), Linux)
+	rm build/*
+else
 	del /f /s /q $(BUILD_DIR)
-  
+endif
+
+#######################################
+# flash
+#######################################
+flash:
+	openocd -f interface/stlink-v2.cfg -f target/stm32f1x.cfg -c "program $(BUILD_DIR)/$(TARGET).hex verify exit reset"
 #######################################
 # dependencies
 #######################################
